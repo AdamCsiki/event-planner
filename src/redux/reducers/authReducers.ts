@@ -1,4 +1,5 @@
 import { AuthState } from "../types/AuthState";
+import { LOGIN_SUCCESS, LOGIN_FAIL } from "../types/States";
 
 const initialState: AuthState = {
 	isLoggedIn: false,

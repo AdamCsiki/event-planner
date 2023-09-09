@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import CreateEventModal from "../CreateEventModal/CreateEventModal";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
+import { basePath } from "../../api/api";
 
 export default function EventList() {
 	const [events, setEvents] = useState<Event[]>([]);
@@ -12,7 +13,7 @@ export default function EventList() {
 	const [visible, setVisible] = useState(false);
 
 	const searchClick = () => {
-		let url = "http://localhost:8080/events";
+		let url = basePath + "/events";
 
 		if (searchQuery) {
 			url += "?" + new URLSearchParams({ query: searchQuery });
