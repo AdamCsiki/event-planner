@@ -1,0 +1,58 @@
+.input-wrapper {
+}
+
+.Input {
+	width: 100%;
+
+	padding: 0.5rem 1rem;
+
+	background-color: var(--color-background);
+	color: var(--color-text);
+
+	opacity: 1;
+
+	border: none;
+}
+
+.Input:focus {
+	/* background-color: var(--color-background-dark); */
+	outline: none;
+	border: none;
+}
+
+.Input:hover {
+	cursor: pointer;
+}
+
+.Input:hover + .input-line {
+	transform: translateY(-100%);
+	position: relative;
+}
+
+.Input:focus + .input-line {
+	transform: translateY(-100%);
+	position: relative;
+}
+
+.Input::-webkit-input-placeholder {
+	color: var(--color-text);
+	opacity: 1;
+}
+.Input:-moz-placeholder {
+	color: var(--color-text);
+	opacity: 1;
+}
+.Input::placeholder {
+	color: var(--color-text);
+	opacity: 1;
+}
+
+.input-line {
+	position: relative;
+
+	padding: 0;
+	margin: 0;
+
+	color: var(--color-text);
+	background-color: var(--color-text);
+}

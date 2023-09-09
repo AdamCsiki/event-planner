@@ -1,0 +1,11 @@
+.event-list-item {
+	border-bottom: 2.5px solid var(--color-text);
+
+	padding: 0.5rem 1rem;
+
+	transition: 0.15s;
+}
+
+.event-list-item:hover {
+	cursor: pointer;
+}

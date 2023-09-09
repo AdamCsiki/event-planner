@@ -1,0 +1,23 @@
+#Navbar {
+}
+
+.link-list {
+	display: flex;
+	flex-wrap: wrap;
+
+	gap: 1rem;
+}
+
+.link-item {
+}
+
+.link-item > * {
+	margin: 0;
+}
+
+.link-item:hover {
+}
+
+.link-text {
+	color: var(--color-background);
+}

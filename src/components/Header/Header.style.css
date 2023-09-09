@@ -1,0 +1,16 @@
+.Header {
+	background-color: #050b14;
+
+	padding: 1rem;
+
+	border-bottom: 1px solid var(--color-text);
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.Logo {
+	color: var(--color-background);
+}
