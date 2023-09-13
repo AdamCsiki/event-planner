@@ -2,7 +2,7 @@ import React from "react";
 import "./_reset.css";
 import "./global.css";
 import "./type-scale.css";
-import Routing from "./Routing";
+import Routing from "./routes/Routing";
 
 function App() {
 	return (

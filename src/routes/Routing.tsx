@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout/Layout";
-import Home from "./pages/Home/Home";
-import Events from "./pages/Events/Events";
-import Event from "./pages/Event/Event";
+import Layout from "../components/Layout/Layout";
+import Home from "../pages/Home/Home";
+import Events from "../pages/Events/Events";
+import Event from "../pages/Event/Event";
 
 export default function Routing() {
 	return (
@@ -22,7 +22,7 @@ export default function Routing() {
 							element={<Events />}
 						/>
 						<Route
-							path=":event"
+							path=":creator/:eventName"
 							element={<Event />}
 						/>
 					</Route>

@@ -19,8 +19,6 @@ export default function EventList() {
 			url += "?" + new URLSearchParams({ query: searchQuery });
 		}
 
-		console.log(url);
-
 		fetch(url, { method: "GET", mode: "cors" })
 			.then((res) => {
 				return res.json();
