@@ -1,3 +1,13 @@
+.link {
+	color: var(--color-background);
+	text-decoration-color: var(--color-background);
+}
+
+.link:hover {
+	text-decoration-color: var(--color-background);
+}
+
 .link-text {
 	color: var(--color-background);
+	text-decoration-color: var(--color-background);
 }

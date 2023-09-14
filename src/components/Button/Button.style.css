@@ -8,6 +8,10 @@
 	border-radius: 2px;
 }
 
+.Button:hover {
+	cursor: pointer;
+}
+
 .Button:active {
 	transition: 0.1s;
 

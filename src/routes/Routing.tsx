@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
 import Home from "../pages/Home/Home";
-import Events from "../pages/Events/Events";
-import Event from "../pages/Event/Event";
+import Events from "../pages/Projects/Projects";
+import Event from "../pages/Project/Project";
 
 export default function Routing() {
 	return (
@@ -16,13 +16,13 @@ export default function Routing() {
 						index
 						element={<Home />}
 					/>
-					<Route path="events">
+					<Route path="projects">
 						<Route
 							index
 							element={<Events />}
 						/>
 						<Route
-							path=":creator/:eventName"
+							path=":creator/:projectName"
 							element={<Event />}
 						/>
 					</Route>

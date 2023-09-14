@@ -1,16 +1,18 @@
 import "./Navbar.style.css";
 import Link from "../Link/Link";
+import Projects from "../../pages/Projects/Projects";
 
 export default function Navbar() {
 	return (
 		<nav id="Navbar">
 			<ul className="link-list">
-				<li className="link-item">
+				<li>
 					<Link to={"/"}>Home</Link>
 				</li>
-				<li className="link-item">
-					<Link to={"/events"}>Events</Link>
+				<li>
+					<Link to={"/projects"}>Projects</Link>
 				</li>
+				<li></li>
 			</ul>
 		</nav>
 	);

@@ -1,10 +1,69 @@
 .input-wrapper {
+	max-width: 20rem;
+
+	padding: 0 0.2rem;
+
+	display: flex;
+	gap: 0.2rem;
+
+	position: relative;
 }
 
-.Input {
+.info-button {
+	background-color: var(--color-secondary);
+	color: var(--color-background);
+
+	font-weight: 600;
+
+	border: none;
+
+	width: 1.25rem;
+	height: 1.25rem;
+
+	border-radius: 8px;
+
+	transform: translateY(25%) scale(0.75);
+}
+
+.info-button:hover {
+	transform: translateY(25%) scale(0.76);
+}
+
+.info-button:active {
+	background-color: var(--color-secondary);
+
+	top: 50%;
+	transform: translateY(25%) scale(0.6);
+}
+
+.info-popover {
+	background-color: var(--color-secondary);
+	color: var(--color-background);
+
+	padding: 0.5rem;
+
+	font-size: small;
+
+	border-radius: 10px;
+
+	position: absolute;
+
+	left: 65%;
+}
+
+.info-popover::before {
+	content: " ";
+
+	width: 1rem;
+	height: 1rem;
+
+	background-color: var(--color-secondary);
+}
+
+.input-element {
 	width: 100%;
 
-	padding: 0.5rem 1rem;
+	padding: 0.5rem 0.75rem;
 
 	background-color: var(--color-background);
 	color: var(--color-text);
@@ -14,40 +73,41 @@
 	border: none;
 }
 
-.Input:focus {
+.input-element:focus {
 	/* background-color: var(--color-background-dark); */
 	outline: none;
 	border: none;
 }
 
-.Input:hover {
+.input-element:hover {
 	cursor: pointer;
 }
 
-.Input:hover + .input-line {
+.input-element:hover + .input-line {
 	transform: translateY(-100%);
 	position: relative;
 }
 
-.Input:focus + .input-line {
+.input-element:focus + .input-line {
 	transform: translateY(-100%);
 	position: relative;
 }
 
-.Input::-webkit-input-placeholder {
+.input-element::-webkit-input-placeholder {
 	color: var(--color-text);
 	opacity: 1;
 }
-.Input:-moz-placeholder {
+.input-element:-moz-placeholder {
 	color: var(--color-text);
 	opacity: 1;
 }
-.Input::placeholder {
+.input-element::placeholder {
 	color: var(--color-text);
 	opacity: 1;
 }
 
 .input-line {
+	width: 100%;
 	position: relative;
 
 	padding: 0;

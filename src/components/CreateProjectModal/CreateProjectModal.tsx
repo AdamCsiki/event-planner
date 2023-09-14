@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
-import "./CreateEventModal.style.css";
-import { EventForm } from "../../interfaces/EventForm";
+import "./CreateProjectModal.style.css";
+import { ProjectFormModel } from "../../interfaces/ProjectFormModel";
 
 interface ExtendedProps {
 	visible: boolean;
@@ -10,11 +10,11 @@ interface ExtendedProps {
 	onFinish: () => void;
 }
 
-export default function CreateEventModal(props: ExtendedProps) {
+export default function CreateProjectModal(props: ExtendedProps) {
 	const [invited, setInvited] = useState<string[]>([]);
 	const [current, setCurrent] = useState<string>("");
 
-	const [form, setForm] = useState<EventForm>({} as EventForm);
+	const [form, setForm] = useState<ProjectFormModel>({} as ProjectFormModel);
 
 	const addPerson = () => {
 		console.log(invited.indexOf(current));
@@ -34,8 +34,8 @@ export default function CreateEventModal(props: ExtendedProps) {
 		});
 	};
 
-	const createEvent = () => {
-		fetch("http://localhost:8080/events/create", {
+	const createProject = () => {
+		fetch("http://localhost:8080/projects/create", {
 			method: "POST",
 			body: JSON.stringify(form),
 		})
@@ -72,6 +72,7 @@ export default function CreateEventModal(props: ExtendedProps) {
 				</div>
 				<div className="create-input-container">
 					<Input
+						info_enabled={false}
 						placeholder="Title"
 						onChange={(e) => {
 							setForm((old_form) => {
@@ -80,11 +81,20 @@ export default function CreateEventModal(props: ExtendedProps) {
 							});
 						}}
 					/>
-					<Input placeholder="Max Participants" />
+					<Input
+						info_enabled={false}
+						placeholder="Max Participants"
+					/>
 					<div className="date-container">
-						<Input type="date" />
+						<Input
+							info_enabled={false}
+							type="date"
+						/>
 						<h6>to</h6>
-						<Input type="date" />
+						<Input
+							info_enabled={false}
+							type="date"
+						/>
 					</div>
 				</div>
 				<div className="button-container">
@@ -113,6 +123,7 @@ export default function CreateEventModal(props: ExtendedProps) {
 				<h5>Invite</h5>
 				<div className="button-container">
 					<Input
+						info_enabled={false}
 						placeholder="Name / Id"
 						onChange={(e) => {
 							setCurrent(e.target.value);

@@ -1,4 +1,4 @@
-export interface EventForm {
+export interface ProjectFormModel {
 	id: number;
 	creator: string;
 	title: string;
