@@ -1,4 +1,7 @@
 .Button {
+	height: fit-content;
+	width: fit-content;
+
 	background-color: var(--color-secondary);
 	color: var(--color-background);
 
@@ -9,16 +12,12 @@
 }
 
 .Button:hover {
+	background-color: var(--color-primary);
 	cursor: pointer;
 }
 
 .Button:active {
-	transition: 0.1s;
-
-	background-color: var(--color-secondary);
 	color: var(--color-background);
-
-	transform: scale(0.9);
 }
 
 .button-text {

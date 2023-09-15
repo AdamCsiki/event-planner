@@ -1,7 +1,12 @@
 import { HtmlHTMLAttributes } from "react";
 import { TaskModel } from "../../interfaces/TaskModel";
 
-export default function Task(task: TaskModel) {
+interface ExtendedProps extends HtmlHTMLAttributes<HTMLDivElement> {
+	task: TaskModel;
+}
+
+export default function Task(props: ExtendedProps) {
+	const { task } = props;
 	return (
 		<div>
 			<h5>{task.name}</h5>

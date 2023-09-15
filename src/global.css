@@ -12,6 +12,11 @@
 	box-sizing: border-box;
 }
 
+hr {
+	color: var(--color-primary);
+	margin: 0;
+}
+
 body,
 html {
 	margin: 0;

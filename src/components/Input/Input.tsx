@@ -2,12 +2,12 @@ import "./Input.style.css";
 import { InputHTMLAttributes, useEffect, useState } from "react";
 
 interface ExtendedProps extends InputHTMLAttributes<HTMLInputElement> {
-	info_enabled: boolean;
+	info_enabled?: boolean;
 	info_text?: string;
 }
 
 export default function Input({
-	info_enabled,
+	info_enabled = false,
 	info_text,
 	...props
 }: ExtendedProps) {
@@ -22,7 +22,6 @@ export default function Input({
 					{...props}
 				/>
 				<hr className="input-line" />
-				<div>{info_text}</div>
 			</div>
 			{info_enabled && (
 				<>
@@ -50,7 +49,7 @@ export default function Input({
 							visibility: +popActive ? "visible" : "hidden",
 						}}
 					>
-						Hello
+						{info_text}
 					</div>
 				</>
 			)}
