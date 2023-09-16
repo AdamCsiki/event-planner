@@ -11,6 +11,7 @@ import { TaskModel } from "../../interfaces/TaskModel";
 import Input from "../../components/Input/Input";
 import Task from "../../components/Task/Task";
 import Board from "../../components/Board/Board";
+import { BoardModel } from "../../interfaces/BoardModel";
 
 export default function Project() {
 	const { creator, projectName } = useParams();
@@ -18,11 +19,11 @@ export default function Project() {
 	const [userProject, setUserProject] = useState<{
 		title: string;
 		details: string;
-		boards: { [title: string]: TaskModel[] };
+		boards: BoardModel[];
 	}>({
 		title: "Miau",
 		details: "This contains some information about the project",
-		boards: {},
+		boards: [],
 	});
 
 	const [newBoardName, setNewBoardName] = useState("");
@@ -35,15 +36,71 @@ export default function Project() {
 		if (name === null || name === undefined || name.length === 0) {
 			return;
 		}
+
+		const newBoard: BoardModel = {
+			id: Math.floor(Math.random() * 100),
+			name: name,
+			tasks: [],
+		};
+
 		setUserProject((current) => {
+			current.boards.push(newBoard);
+
 			return {
 				...current,
-				boards: { ...current.boards, [name]: [] },
 			};
 		});
 	};
 
-	const createTask = (name: string) => {};
+	const removeBoard = (boardId: number) => {
+		setUserProject((current) => {
+			const index = current.boards.findIndex(
+				(board) => board.id === boardId
+			);
+
+			current.boards.splice(index, 1);
+
+			return { ...current };
+		});
+	};
+
+	const createTask = (boardId: number) => {
+		const newTask: TaskModel = {
+			id: Math.floor(Math.random() * 10000),
+			name: "Task",
+			taken: false,
+			user: null,
+		};
+
+		setUserProject((current) => {
+			const index = current.boards.findIndex(
+				(board) => board.id === boardId
+			);
+
+			current.boards[index].tasks.push(newTask);
+
+			return {
+				...current,
+			};
+		});
+	};
+
+	const removeTask = (boardId: number, id: number) => {
+		setUserProject((current) => {
+			const boardIndex = current.boards.findIndex(
+				(board) => board.id === boardId
+			);
+			const index = current.boards[boardIndex].tasks.findIndex(
+				(task) => task.id === id
+			);
+
+			if (index !== -1) {
+				current.boards[boardIndex].tasks.splice(index, 1);
+			}
+
+			return { ...current };
+		});
+	};
 
 	useEffect(() => {}, []);
 
@@ -56,14 +113,20 @@ export default function Project() {
 				</h6>
 			</header>
 			<div className="project-boards">
-				{Object.keys(userProject.boards).map((key, index) => {
-					const tasks: TaskModel[] = userProject.boards[key];
+				{userProject.boards.map((board, index) => {
+					const { id, name, tasks } = board;
 
 					return (
 						<Board
-							key={index}
-							name={key}
+							id={id}
+							key={id}
+							name={name}
 							tasks={tasks}
+							addTask={() => {
+								createTask(id);
+							}}
+							removeTask={removeTask}
+							removeBoard={removeBoard}
 						/>
 					);
 				})}
@@ -77,7 +140,6 @@ export default function Project() {
 					<Button
 						onClick={() => {
 							createBoard(newBoardName);
-							setNewBoardName("");
 						}}
 					>
 						Add

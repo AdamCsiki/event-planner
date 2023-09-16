@@ -9,7 +9,7 @@ export default function Button(props: ExtendedProps) {
 			{...props}
 			className="Button"
 		>
-			<h6 className="button-text">{props.children}</h6>
+			{props.children}
 		</button>
 	);
 }

@@ -42,3 +42,33 @@ a:hover {
 	color: var(--color-secondary);
 	text-decoration: underline;
 }
+
+button {
+	height: fit-content;
+	width: auto;
+
+	padding: 0;
+
+	background-color: var(--color-secondary);
+	color: var(--color-background);
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	border: none;
+	border-radius: 2px;
+}
+
+button:hover {
+	background-color: var(--color-primary);
+	cursor: pointer;
+}
+
+button:active {
+	color: var(--color-background);
+}
+
+.nopad {
+	padding: 0;
+}

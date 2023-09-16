@@ -1,0 +1,20 @@
+.Task {
+	border: 1px solid var(--color-primary);
+
+	padding: 0.25rem;
+
+	display: flex;
+	flex-direction: column;
+}
+
+.task-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	font-size: small;
+}
+
+.task-content {
+	display: flex;
+}
