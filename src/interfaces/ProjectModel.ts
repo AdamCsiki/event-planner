@@ -1,11 +1,8 @@
-import { UserModel } from "./UserModel";
+import { BoardModel } from "./BoardModel";
 
 export interface ProjectModel {
+	id: number;
 	title: string;
-	creator: string;
-	details?: string;
-	maxParticipants: number;
-	blackList: UserModel[];
-	invitees: UserModel[];
-	participants: UserModel[];
+	details: string;
+	boards: BoardModel[];
 }

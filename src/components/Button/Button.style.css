@@ -10,7 +10,6 @@
 	display: flex;
 
 	border: none;
-	border-radius: 2px;
 }
 
 .Button:hover {
@@ -36,7 +35,6 @@
 	justify-content: center;
 
 	border: none;
-	border-radius: 2px;
 }
 
 .Button-x:hover {

@@ -1,6 +1,9 @@
+import { UserModel } from "../../interfaces/UserModel";
+
 export type AuthState = {
 	isLoggedIn: boolean;
+	token: string | null;
 	id: number | null;
-	userId: string | null;
 	name: string | null;
+	email: string | null;
 };

@@ -4,8 +4,9 @@ import { LOGIN_SUCCESS, LOGIN_FAIL } from "../types/States";
 const initialState: AuthState = {
 	isLoggedIn: false,
 	id: null,
-	userId: null,
 	name: null,
+	email: null,
+	token: null,
 };
 
 export default function authReducer(
@@ -19,17 +20,19 @@ export default function authReducer(
 			return {
 				...state,
 				isLoggedIn: true,
+				token: payload.token,
 				id: payload.id,
-				userId: payload.userId,
 				name: payload.name,
+				email: payload.email,
 			};
 		case LOGIN_FAIL:
 			return {
 				...state,
 				isLoggedIn: false,
+				token: null,
 				id: null,
-				userId: null,
 				name: null,
+				email: null,
 			};
 		default: {
 			return { ...state };

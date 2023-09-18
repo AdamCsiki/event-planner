@@ -3,6 +3,7 @@ import { UserModel } from "./UserModel";
 export interface TaskModel {
 	id: number;
 	name: string;
+	details: string;
 	taken: boolean;
 	user: UserModel | null;
 }

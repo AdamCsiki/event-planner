@@ -68,6 +68,7 @@ export default function Project() {
 		const newTask: TaskModel = {
 			id: Math.floor(Math.random() * 10000),
 			name: "Task",
+			details: "",
 			taken: false,
 			user: null,
 		};

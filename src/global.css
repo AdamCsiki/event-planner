@@ -1,4 +1,6 @@
 :root {
+	--black: #050b14;
+
 	--color-primary: #bb84a4;
 	--color-secondary: #6e3e70;
 
@@ -21,6 +23,8 @@ body,
 html {
 	margin: 0;
 	padding: 0;
+
+	overflow: hidden;
 }
 
 .App {

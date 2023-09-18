@@ -59,20 +59,9 @@ export default function Projects() {
 					</Button>
 				</div>
 				<ul className="projects-list">
-					{/* {projects.length === 0 && (
+					{projects.length === 0 && (
 						<h5 className="no-projects">No Projects :\</h5>
-					)} */}
-					<ProjectListItem
-						key={1}
-						project={{
-							title: "Miau",
-							creator: "Ravelyk",
-							maxParticipants: 0,
-							blackList: [],
-							invitees: [],
-							participants: [],
-						}}
-					/>
+					)}
 					{projects.length > 0 &&
 						projects.map((project, index) => (
 							<ProjectListItem

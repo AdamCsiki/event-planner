@@ -9,14 +9,8 @@ export default function ProjectListItem({
 }) {
 	return (
 		<li className="project-list-item">
-			<Link to={`/projects/${project.creator}/${project.title}`}>
+			<Link to={`/projects/${project.title}`}>
 				<h5>{project.title}</h5>
-				<h6>{project.creator}</h6>
-				<h5>
-					{project.blackList.map((user) => (
-						<h5>{user.name}</h5>
-					))}
-				</h5>
 			</Link>
 		</li>
 	);

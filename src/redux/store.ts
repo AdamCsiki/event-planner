@@ -8,7 +8,7 @@ export const store = configureStore({
 		getDefaultMiddleware({
 			immutableCheck: false,
 			serializableCheck: false,
-		}).concat(reduxLogger),
+		}),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
