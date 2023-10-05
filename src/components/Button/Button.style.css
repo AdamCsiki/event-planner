@@ -25,10 +25,10 @@
 	height: fit-content;
 	width: auto;
 
-	padding: 0;
-
 	background-color: var(--color-secondary);
 	color: var(--color-background);
+
+	padding: 0.1rem;
 
 	display: flex;
 	align-items: center;

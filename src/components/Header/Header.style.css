@@ -14,3 +14,13 @@
 .Logo {
 	color: var(--color-background);
 }
+
+.header-nav {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+	flex-grow: 1;
+
+	gap: 1rem;
+}

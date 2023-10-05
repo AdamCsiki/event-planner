@@ -3,49 +3,6 @@
 	height: 100%;
 
 	display: flex;
-	flex-direction: column;
-}
-
-.home-background {
-	padding: 10% 0;
-
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: flex-start;
-
-	flex-grow: 1;
-
-	position: relative;
-
-	overflow: hidden;
-}
-
-.background-header {
-	background-color: black;
-	color: var(--color-background);
-
-	width: 50%;
-	block-size: fit-content;
-
-	padding: 1rem 15%;
-}
-
-.bg-h-1 {
-	z-index: 1;
-}
-
-.bg-h-2 {
-	z-index: 2;
-}
-
-.bg-h-3 {
-	z-index: 3;
-}
-
-.bg-h-4 {
-	z-index: 4;
-}
-.bg-h-5 {
-	z-index: 5;
+	justify-content: center;
+	align-items: center;
 }

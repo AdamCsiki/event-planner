@@ -1,9 +1,9 @@
 import "./RegisterPage.style.css";
-import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { useState } from "react";
 import { RegisterFormModel } from "../../interfaces/RegisterFormModel";
 import { basePath } from "../../api/api";
+import { TextField, Typography } from "@mui/material";
 
 export default function RegisterPage() {
 	const [registerForm, setRegisterForm] = useState<RegisterFormModel>(
@@ -49,9 +49,14 @@ export default function RegisterPage() {
 				}}
 			>
 				<div className="register-header">
-					<h4>Register</h4>
+					<Typography
+						variant="h2"
+						sx={{ color: "primary.light" }}
+					>
+						Register
+					</Typography>
 				</div>
-				<Input
+				<TextField
 					placeholder="name"
 					onChange={(e) =>
 						setRegisterForm((form) => {
@@ -60,7 +65,7 @@ export default function RegisterPage() {
 						})
 					}
 				/>
-				<Input
+				<TextField
 					placeholder="email"
 					onChange={(e) =>
 						setRegisterForm((form) => {
@@ -69,7 +74,7 @@ export default function RegisterPage() {
 						})
 					}
 				/>
-				<Input
+				<TextField
 					placeholder="confirm email"
 					onChange={(e) =>
 						setRegisterForm((form) => {
@@ -78,7 +83,7 @@ export default function RegisterPage() {
 						})
 					}
 				/>
-				<Input
+				<TextField
 					type="password"
 					placeholder="password"
 					onChange={(e) =>
@@ -88,7 +93,7 @@ export default function RegisterPage() {
 						})
 					}
 				/>
-				<Input
+				<TextField
 					type="password"
 					placeholder="confirm password"
 					onChange={(e) =>
@@ -100,6 +105,7 @@ export default function RegisterPage() {
 				/>
 				<div className="register-form-button-container">
 					<Button
+						size="large"
 						onClick={() => {
 							submit();
 						}}

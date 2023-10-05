@@ -4,19 +4,13 @@
 	--color-primary: #bb84a4;
 	--color-secondary: #6e3e70;
 
-	--color-background: #f0ede5;
-	--color-background-dark: #fdc19f;
+	--color-background: #fbfbfb;
 
 	--color-text: #6e3e70;
 }
 
 * {
 	box-sizing: border-box;
-}
-
-hr {
-	color: var(--color-primary);
-	margin: 0;
 }
 
 body,
@@ -37,24 +31,11 @@ html {
 	flex-direction: column;
 }
 
-a {
-	color: var(--color-text);
-	text-decoration: none;
-}
-
-a:hover {
-	color: var(--color-secondary);
-	text-decoration: underline;
-}
-
 button {
 	height: fit-content;
 	width: auto;
 
 	padding: 0;
-
-	background-color: var(--color-secondary);
-	color: var(--color-background);
 
 	display: flex;
 	align-items: center;
@@ -62,15 +43,6 @@ button {
 
 	border: none;
 	border-radius: 2px;
-}
-
-button:hover {
-	background-color: var(--color-primary);
-	cursor: pointer;
-}
-
-button:active {
-	color: var(--color-background);
 }
 
 .nopad {

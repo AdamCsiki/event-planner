@@ -3,8 +3,8 @@ import { TaskModel } from "../../interfaces/TaskModel";
 import Task from "../Task/Task";
 import Button from "../Button/Button";
 import { BsX } from "react-icons/bs";
-import Input from "../Input/Input";
 import { useState } from "react";
+import { TextField } from "@mui/material";
 
 interface ExtendedProps {
 	id: number;
@@ -59,7 +59,7 @@ export default function Board(props: ExtendedProps) {
 			})}
 			<li>
 				<div className="new-task-wrapper">
-					<Input
+					<TextField
 						placeholder="Task name"
 						onChange={(e) => {
 							setNewTaskName(e.target.value);

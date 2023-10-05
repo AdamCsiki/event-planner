@@ -1,5 +1,11 @@
 import { AuthState } from "../types/AuthState";
-import { LOGIN_SUCCESS, LOGIN_FAIL } from "../types/States";
+import {
+	LOGIN_SUCCESS,
+	LOGIN_FAIL,
+	SET_USER,
+	REFRESH_SUCCESS,
+	REFRESH_FAIL,
+} from "../types/States";
 
 const initialState: AuthState = {
 	isLoggedIn: false,
@@ -21,9 +27,6 @@ export default function authReducer(
 				...state,
 				isLoggedIn: true,
 				token: payload.token,
-				id: payload.id,
-				name: payload.name,
-				email: payload.email,
 			};
 		case LOGIN_FAIL:
 			return {
@@ -33,6 +36,25 @@ export default function authReducer(
 				id: null,
 				name: null,
 				email: null,
+			};
+		case SET_USER:
+			return {
+				...state,
+				id: payload.id,
+				email: payload.email,
+				name: payload.name,
+			};
+		case REFRESH_SUCCESS:
+			return {
+				...state,
+				isLoggedIn: true,
+				token: payload.token,
+			};
+		case REFRESH_FAIL:
+			return {
+				...state,
+				isLoggedIn: false,
+				token: null,
 			};
 		default: {
 			return { ...state };

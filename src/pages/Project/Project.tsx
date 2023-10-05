@@ -3,15 +3,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { basePath } from "../../api/api";
 import Link from "../../components/Link/Link";
-import { ProjectModel } from "../../interfaces/ProjectModel";
 import Button from "../../components/Button/Button";
-import TaskList from "../../components/Board/Board";
-import { UserModel } from "../../interfaces/UserModel";
 import { TaskModel } from "../../interfaces/TaskModel";
-import Input from "../../components/Input/Input";
-import Task from "../../components/Task/Task";
 import Board from "../../components/Board/Board";
 import { BoardModel } from "../../interfaces/BoardModel";
+import { TextField } from "@mui/material";
 
 export default function Project() {
 	const { creator, projectName } = useParams();
@@ -103,8 +99,6 @@ export default function Project() {
 		});
 	};
 
-	useEffect(() => {}, []);
-
 	return (
 		<div className="Project">
 			<header className="project-header">
@@ -132,7 +126,7 @@ export default function Project() {
 					);
 				})}
 				<div className="project-new-board-container">
-					<Input
+					<TextField
 						placeholder="Board name"
 						onChange={(e) => {
 							setNewBoardName(e.target.value);

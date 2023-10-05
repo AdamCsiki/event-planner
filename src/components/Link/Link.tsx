@@ -1,13 +1,18 @@
 import "./Link.style.css";
-import { Link as LinkObj, LinkProps } from "react-router-dom";
+import { Link as RouterLink, LinkProps } from "react-router-dom";
+import { Link as MuiLink, LinkProps as MuiLinkProps } from "@mui/material";
 
-export default function Link(props: LinkProps) {
+interface ExtendedProps extends LinkProps {
+	component?: any;
+}
+
+export default function Link(props: ExtendedProps) {
 	return (
-		<LinkObj
-			className="link"
+		<MuiLink
 			{...props}
+			component={props.component || RouterLink}
 		>
-			<h6 className="link-text">{props.children}</h6>
-		</LinkObj>
+			{props.children}
+		</MuiLink>
 	);
 }

@@ -1,15 +1,15 @@
 import "./Button.style.css";
-import { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import styled from "@emotion/styled";
+import { Button as MuiButton, ButtonProps } from "@mui/material";
 
-interface ExtendedProps extends HTMLAttributes<HTMLButtonElement> {}
+const Button = styled(MuiButton)<ButtonProps>(({ theme }: any) => ({
+	color: theme.palette.primary.contrastText,
+	backgroundColor: theme.palette.primary.light,
+	boxShadow: "",
+	":hover": {
+		backgroundColor: theme.palette.primary.dark,
+		border: theme.palette.text.primary,
+	},
+}));
 
-export default function Button(props: ExtendedProps) {
-	return (
-		<button
-			{...props}
-			className="Button"
-		>
-			{props.children}
-		</button>
-	);
-}
+export default Button;

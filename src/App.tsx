@@ -1,14 +1,32 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./_reset.css";
 import "./global.css";
-import "./type-scale.css";
 import Routing from "./routes/Routing";
+import NotificationProvider from "./context/NotificationContext";
+import { useSelector } from "react-redux";
+import { RootState } from "./redux/store";
+import NotificationModel from "./interfaces/NotificationModel";
+import ThemeProvider from "./context/ThemeContext";
+import FetchProvider, { FetchContext } from "./context/FetchContext";
 
 function App() {
+	const auth = useSelector((state: RootState) => state.auth);
+	const fetchContext = useContext(FetchContext);
+
+	const [notification, setNotification] = React.useState<NotificationModel>(
+		{} as NotificationModel
+	);
+
 	return (
-		<div className="App">
-			<Routing />
-		</div>
+		<ThemeProvider>
+			<FetchProvider value={fetchContext}>
+				<NotificationProvider value={{ notification, setNotification }}>
+					<div className="App">
+						<Routing />
+					</div>
+				</NotificationProvider>
+			</FetchProvider>
+		</ThemeProvider>
 	);
 }
 

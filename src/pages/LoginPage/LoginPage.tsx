@@ -1,38 +1,46 @@
 import "./LoginPage.style.css";
 import { useState } from "react";
-import { basePath } from "../../api/api";
 import Button from "../../components/Button/Button";
-import Input from "../../components/Input/Input";
 import { LoginFormModel } from "../../interfaces/LoginFormModel";
 import { useDispatch } from "react-redux";
-import { Dispatch } from "redux";
-import login from "../../redux/actions/authActions";
+import { getUserByToken, login } from "../../redux/actions/authActions";
+import { useNavigate } from "react-router-dom";
+import { FormControl, TextField, Typography } from "@mui/material";
 
 export default function LoginPage() {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const [loginForm, setLoginForm] = useState<LoginFormModel>(
 		{} as LoginFormModel
 	);
 
 	const submit = () => {
-		login(loginForm).then((action) => {
-			dispatch(action);
-		});
+		login(loginForm)
+			.then((action: any) => {
+				dispatch(action);
+			})
+			.finally(() => {
+				navigate(-1);
+			});
 	};
 
 	return (
 		<div className="LoginPage">
-			<form
+			<FormControl
 				className="login-form"
 				onSubmit={(e) => {
 					e.preventDefault();
 				}}
 			>
-				<div className="login-header">
-					<h4>Login</h4>
-				</div>
-				<Input
+				<Typography
+					variant="h2"
+					mb={3}
+					sx={{ color: "primary.light" }}
+				>
+					Login
+				</Typography>
+				<TextField
 					placeholder="email"
 					onChange={(e) => {
 						setLoginForm((form) => {
@@ -41,7 +49,7 @@ export default function LoginPage() {
 						});
 					}}
 				/>
-				<Input
+				<TextField
 					type="password"
 					placeholder="password"
 					onChange={(e) => {
@@ -53,6 +61,7 @@ export default function LoginPage() {
 				/>
 				<div className="login-form-button-container">
 					<Button
+						size="large"
 						onClick={() => {
 							submit();
 						}}
@@ -60,7 +69,7 @@ export default function LoginPage() {
 						Login
 					</Button>
 				</div>
-			</form>
+			</FormControl>
 		</div>
 	);
 }

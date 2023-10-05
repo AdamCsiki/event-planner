@@ -1,0 +1,42 @@
+.Notification {
+	z-index: 10;
+
+	background-color: var(--black);
+	color: var(--color-background);
+
+	min-width: 12rem;
+	height: 9rem;
+
+	border-radius: 4px;
+
+	padding: 1rem;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+	gap: 1rem;
+
+	position: absolute;
+
+	top: 20%;
+	left: 5%;
+}
+
+.notification-header {
+	width: 100%;
+	height: fit-content;
+
+	display: flex;
+	justify-content: space-between;
+
+	gap: 1rem;
+}
+
+.notification-footer {
+	width: 100%;
+
+	display: flex;
+	justify-content: space-between;
+}
