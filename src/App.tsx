@@ -10,7 +10,6 @@ import ThemeProvider from "./context/ThemeContext";
 import FetchProvider, { FetchContext } from "./context/FetchContext";
 
 function App() {
-	const auth = useSelector((state: RootState) => state.auth);
 	const fetchContext = useContext(FetchContext);
 
 	const [notification, setNotification] = React.useState<NotificationModel>(

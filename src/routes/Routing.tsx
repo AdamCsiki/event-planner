@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "../components/Layout/Layout";
+import Layout, { LayoutNoFooter } from "../components/Layout/Layout";
 import Home from "../pages/Home/Home";
 import Events from "../pages/Projects/Projects";
 import Event from "../pages/Project/Project";
@@ -18,14 +18,17 @@ export default function Routing() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route
-					path=""
-					element={<Layout />}
-				>
+				<Route element={<Layout />}>
 					<Route
 						index
 						element={<Home />}
 					/>
+					<Route
+						path="user/:name"
+						element={<UserPage />}
+					/>
+				</Route>
+				<Route element={<LayoutNoFooter />}>
 					<Route
 						path="login"
 						element={<LoginPage />}
@@ -33,10 +36,6 @@ export default function Routing() {
 					<Route
 						path="register"
 						element={<RegisterPage />}
-					/>
-					<Route
-						path="user/:name"
-						element={<UserPage />}
 					/>
 					<Route
 						path="projects"

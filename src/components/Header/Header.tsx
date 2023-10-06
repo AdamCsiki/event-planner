@@ -2,12 +2,11 @@ import "./Header.style.css";
 import Navbar from "../Navbar/Navbar";
 import Link from "../Link/Link";
 import { SwipeableDrawer, Typography } from "@mui/material";
-import { Fingerprint, Dehaze } from "@mui/icons-material";
+import { Dehaze } from "@mui/icons-material";
 import IconButton from "../IconButton/IconButton";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import LinkButton from "../LinkButton/LinkButton";
 
 export default function Header() {
 	const auth = useSelector((state: RootState) => state.auth);
@@ -21,7 +20,7 @@ export default function Header() {
 					sx={{ color: "primary.contrastText" }}
 					variant="h4"
 				>
-					EPlan
+					EPlanner
 				</Typography>
 			</Link>
 			<div className="header-nav">

@@ -3,6 +3,18 @@ import { Outlet } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 
+export function LayoutNoFooter() {
+	return (
+		<>
+			<Header />
+
+			<main id="MainPage">
+				<Outlet />
+			</main>
+		</>
+	);
+}
+
 export default function Layout() {
 	return (
 		<>
