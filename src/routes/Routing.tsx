@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Layout, { LayoutNoFooter } from "../components/Layout/Layout";
 import Home from "../pages/Home/Home";
 import Events from "../pages/Projects/Projects";
@@ -11,12 +11,11 @@ import AuthenticatedRoute from "./AuthenticatedRoute";
 import UserPage from "../pages/UserPage/UserPage";
 
 export default function Routing() {
-	const auth = useSelector((state: RootState) => state.auth);
-
-	const dispatch = useDispatch();
+	const basename =
+		document.querySelector("base")?.getAttribute("href") ?? "/";
 
 	return (
-		<BrowserRouter>
+		<HashRouter basename={basename}>
 			<Routes>
 				<Route element={<Layout />}>
 					<Route
@@ -52,6 +51,6 @@ export default function Routing() {
 					</Route>
 				</Route>
 			</Routes>
-		</BrowserRouter>
+		</HashRouter>
 	);
 }
