@@ -22,30 +22,26 @@ export default function Home() {
 				</video>
 			</div>
 			<div className="home-top">
-				<div className="home-up">
-					<Typography
-						variant="h3"
-						sx={{
-							textShadow:
-								"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
-						}}
-					>
-						Always plan...
-					</Typography>
-				</div>
-
-				<div className="home-down">
-					<Typography
-						variant="h3"
-						sx={{
-							textShadow:
-								"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
-							textAlign: "right",
-						}}
-					>
-						...and never worry about tomorrow.
-					</Typography>
-				</div>
+				<Typography
+					variant="h2"
+					sx={{
+						fontWeight: 700,
+						// textShadow:
+						// 	"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
+					}}
+				>
+					Plan ahead
+				</Typography>
+				<Typography
+					variant="h4"
+					sx={{
+						// textShadow:
+						// 	"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
+						textAlign: "right",
+					}}
+				>
+					and never worry about tomorrow
+				</Typography>
 			</div>
 		</div>
 	);

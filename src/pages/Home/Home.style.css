@@ -28,8 +28,6 @@
 
 	width: auto;
 	height: 100%;
-
-	filter: brightness(90%);
 }
 
 .home-top {
@@ -37,32 +35,20 @@
 
 	color: var(--color-background);
 
-	height: 100%;
-
 	padding: 1rem;
 
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-	flex-grow: 1;
+	justify-content: center;
+	align-items: center;
 
 	position: relative;
+
+	overflow: hidden;
 }
 
-.home-up,
-.home-down {
-	width: 100%;
-	padding: 1rem;
-}
-
-.home-up {
-	display: flex;
-	justify-content: flex-start;
-}
-
-.home-down {
-	display: flex;
-	justify-content: flex-end;
+.home-top > * {
+	padding: 0.5rem;
 }
 
 @media screen and (min-width: 1040px) {

@@ -11,6 +11,8 @@ export default function LoginPage() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	const [errorMsh, setErrorMsg] = useState();
+
 	const [loginForm, setLoginForm] = useState<LoginFormModel>(
 		{} as LoginFormModel
 	);
@@ -20,6 +22,7 @@ export default function LoginPage() {
 			.then((action: any) => {
 				dispatch(action);
 			})
+			.catch((err) => {})
 			.finally(() => {
 				navigate(-1);
 			});
