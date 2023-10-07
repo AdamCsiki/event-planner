@@ -94,7 +94,10 @@ export default function LoginPage() {
 						Login
 					</Button>
 				</div>
-				<Typography sx={{ color: "error.main", fontWeight: 500 }}>
+				<Typography
+					color="error"
+					sx={{ fontWeight: 500 }}
+				>
 					{errorMsg}
 				</Typography>
 			</FormControl>

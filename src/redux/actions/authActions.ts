@@ -7,8 +7,7 @@ import {
 	LOGOUT,
 	SET_USER,
 } from "../types/States";
-import { AsyncLocalStorage } from "async_hooks";
-import { UserModel } from "../../interfaces/UserModel";
+import { RegisterFormModel } from "../../interfaces/RegisterFormModel";
 
 export function login(loginForm: LoginFormModel) {
 	const url = basePath + "/auth/login";
@@ -21,6 +20,43 @@ export function login(loginForm: LoginFormModel) {
 		headers: {
 			"Content-Type": "application/json",
 		},
+	})
+		.then((res) => {
+			return res.json();
+		})
+		.then((data) => {
+			if (data.token) {
+				localStorage.setItem("token", data.token);
+				localStorage.setItem("refresh", data.refresh);
+
+				return {
+					type: LOGIN_SUCCESS,
+					payload: {
+						token: data.token,
+					},
+				};
+			}
+
+			return {
+				type: LOGIN_FAIL,
+			};
+		})
+		.catch((err) => {
+			console.error(err);
+
+			return {
+				type: LOGIN_FAIL,
+			};
+		});
+}
+
+export function register(registerForm: RegisterFormModel) {
+	const url = basePath + "/auth/register";
+
+	return fetch(url, {
+		method: "POST",
+		body: JSON.stringify(registerForm),
+		headers: { "Content-Type": "application/json" },
 	})
 		.then((res) => {
 			return res.json();

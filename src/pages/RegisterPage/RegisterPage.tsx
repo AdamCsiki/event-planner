@@ -3,47 +3,44 @@ import Button from "../../components/Button/Button";
 import { useState } from "react";
 import { RegisterFormModel } from "../../interfaces/RegisterFormModel";
 import { basePath } from "../../api/api";
-import { TextField, Typography } from "@mui/material";
+import { FormControl, TextField, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
+import { register } from "../../redux/actions/authActions";
 
 export default function RegisterPage() {
 	const auth = useSelector((state: RootState) => state.auth);
+	const dispatch = useDispatch();
+
+	const [errorMsg, setErrorMsg] = useState<string>("");
+
 	const [registerForm, setRegisterForm] = useState<RegisterFormModel>(
 		{} as RegisterFormModel
 	);
 
 	const navigate = useNavigate();
 
-	const [token, setToken] = useState("");
-
 	const submit = () => {
 		console.log(registerForm);
 		if (registerForm.email !== registerForm.confirmEmail) {
+			setErrorMsg("Email does not match.");
 			return;
 		}
 
 		if (registerForm.password !== registerForm.confirmPassword) {
+			setErrorMsg("Password does not match.");
 			return;
 		}
 
-		const url = basePath + "/auth/register";
-
-		fetch(url, {
-			method: "POST",
-			body: JSON.stringify(registerForm),
-			headers: { "Content-Type": "application/json" },
-		})
-			.then((res) => {
-				return res.json();
-			})
-			.then((data) => {
-				setToken(data.token);
+		register(registerForm)
+			.then((action) => {
+				dispatch(action);
+				navigate("/projects");
 			})
 			.catch((err) => {
-				console.error(err);
+				console.log(err);
 			});
 	};
 
@@ -55,7 +52,7 @@ export default function RegisterPage() {
 
 	return (
 		<div className="RegisterPage">
-			<form
+			<FormControl
 				className="register-form"
 				onSubmit={(e) => {
 					e.preventDefault();
@@ -70,6 +67,7 @@ export default function RegisterPage() {
 					</Typography>
 				</div>
 				<TextField
+					required
 					label="Name"
 					onChange={(e) =>
 						setRegisterForm((form) => {
@@ -82,6 +80,7 @@ export default function RegisterPage() {
 					}}
 				/>
 				<TextField
+					required
 					label="Email"
 					onChange={(e) =>
 						setRegisterForm((form) => {
@@ -94,6 +93,7 @@ export default function RegisterPage() {
 					}}
 				/>
 				<TextField
+					required
 					label="Confirm email"
 					onChange={(e) =>
 						setRegisterForm((form) => {
@@ -106,6 +106,7 @@ export default function RegisterPage() {
 					}}
 				/>
 				<TextField
+					required
 					type="password"
 					label="Password"
 					onChange={(e) =>
@@ -119,6 +120,7 @@ export default function RegisterPage() {
 					}}
 				/>
 				<TextField
+					required
 					type="password"
 					label="Confirm password"
 					onChange={(e) =>
@@ -133,6 +135,7 @@ export default function RegisterPage() {
 				/>
 				<div className="register-form-button-container">
 					<Button
+						type="submit"
 						size="large"
 						onClick={() => {
 							submit();
@@ -141,7 +144,8 @@ export default function RegisterPage() {
 						Register
 					</Button>
 				</div>
-			</form>
+				<Typography color={"error"}>{errorMsg}</Typography>
+			</FormControl>
 		</div>
 	);
 }

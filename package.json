@@ -1,6 +1,6 @@
 {
 	"name": "project-planner",
-	"homepage": ".",
+	"homepage": "https://adamcsiki.github.io/project-planner",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {

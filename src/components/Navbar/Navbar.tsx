@@ -75,7 +75,24 @@ export default function Navbar(props: ExtendedProps) {
 					<Typography>Projects</Typography>
 				</Link>
 			</ListItem>
-			{!auth.isLoggedIn && (
+			{auth.isLoggedIn ? (
+				<>
+					<Divider />
+					<ListItem>
+						<Button
+							variant="contained"
+							sx={{
+								width: "100%",
+							}}
+							onClick={() => {
+								dispatch(logout());
+							}}
+						>
+							<Typography>Logout</Typography>
+						</Button>
+					</ListItem>
+				</>
+			) : (
 				<>
 					<Divider />
 					<ListItem>
@@ -85,20 +102,6 @@ export default function Navbar(props: ExtendedProps) {
 					</ListItem>
 				</>
 			)}
-			<Divider />
-			<ListItem>
-				<Button
-					variant="contained"
-					sx={{
-						width: "100%",
-					}}
-					onClick={() => {
-						dispatch(logout());
-					}}
-				>
-					<Typography>Logout</Typography>
-				</Button>
-			</ListItem>
 		</List>
 	);
 }
