@@ -5,6 +5,8 @@ import {
 	SET_USER,
 	REFRESH_SUCCESS,
 	REFRESH_FAIL,
+	SET_TOKENS,
+	LOGOUT,
 } from "../types/States";
 
 const initialState: AuthState = {
@@ -56,6 +58,10 @@ export default function authReducer(
 				isLoggedIn: false,
 				token: null,
 			};
+		case SET_TOKENS:
+			return { ...state, isLoggedIn: true, token: payload.token };
+		case LOGOUT:
+			return { ...state, ...initialState };
 		default: {
 			return { ...state };
 		}

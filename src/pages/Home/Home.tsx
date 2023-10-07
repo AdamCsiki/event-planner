@@ -1,18 +1,17 @@
 import "./Home.style.css";
 import poster from "../../img/Shotcut_00_00_00_000.png";
+import video from "../../video/pufi_background2.mp4";
 import { Typography } from "@mui/material";
 
 export default function Home() {
-	let video = null;
-
-	// the background mp4 is a bit too big for github
-	try {
-		import("../../video/pufi_background2.mp4").then((video_) => {
-			video = video_;
-		});
-	} catch (e) {
-		console.error(e);
-	}
+	// // the background mp4 is a bit too big for github
+	// try {
+	// 	import("../../video/pufi_background2.mp4").then((video_) => {
+	// 		video = video_;
+	// 	});
+	// } catch (e) {
+	// 	console.error(e);
+	// }
 
 	return (
 		<div className="Home">
@@ -52,11 +51,12 @@ export default function Home() {
 				</Typography>
 				<Typography
 					variant="h4"
-					sx={{
-						// textShadow:
-						// 	"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
-						textAlign: "right",
-					}}
+					sx={
+						{
+							// textShadow:
+							// 	"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
+						}
+					}
 				>
 					and never worry about tomorrow
 				</Typography>

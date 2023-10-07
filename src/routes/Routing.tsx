@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout, { LayoutNoFooter } from "../components/Layout/Layout";
 import Home from "../pages/Home/Home";
 import Events from "../pages/Projects/Projects";
@@ -15,7 +15,7 @@ export default function Routing() {
 		document.querySelector("base")?.getAttribute("href") ?? "/";
 
 	return (
-		<HashRouter basename={basename}>
+		<BrowserRouter basename={basename}>
 			<Routes>
 				<Route element={<Layout />}>
 					<Route
@@ -51,6 +51,6 @@ export default function Routing() {
 					</Route>
 				</Route>
 			</Routes>
-		</HashRouter>
+		</BrowserRouter>
 	);
 }

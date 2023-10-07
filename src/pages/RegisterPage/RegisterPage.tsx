@@ -4,11 +4,18 @@ import { useState } from "react";
 import { RegisterFormModel } from "../../interfaces/RegisterFormModel";
 import { basePath } from "../../api/api";
 import { TextField, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
+	const auth = useSelector((state: RootState) => state.auth);
 	const [registerForm, setRegisterForm] = useState<RegisterFormModel>(
 		{} as RegisterFormModel
 	);
+
+	const navigate = useNavigate();
 
 	const [token, setToken] = useState("");
 
@@ -40,6 +47,12 @@ export default function RegisterPage() {
 			});
 	};
 
+	useEffect(() => {
+		if (auth.isLoggedIn) {
+			navigate(-1);
+		}
+	}, []);
+
 	return (
 		<div className="RegisterPage">
 			<form
@@ -57,51 +70,66 @@ export default function RegisterPage() {
 					</Typography>
 				</div>
 				<TextField
-					placeholder="name"
+					label="Name"
 					onChange={(e) =>
 						setRegisterForm((form) => {
 							form.name = e.target.value;
 							return { ...form };
 						})
 					}
+					sx={{
+						label: { color: "var(--grey)" },
+					}}
 				/>
 				<TextField
-					placeholder="email"
+					label="Email"
 					onChange={(e) =>
 						setRegisterForm((form) => {
 							form.email = e.target.value;
 							return { ...form };
 						})
 					}
+					sx={{
+						label: { color: "var(--grey)" },
+					}}
 				/>
 				<TextField
-					placeholder="confirm email"
+					label="Confirm email"
 					onChange={(e) =>
 						setRegisterForm((form) => {
 							form.confirmEmail = e.target.value;
 							return { ...form };
 						})
 					}
+					sx={{
+						label: { color: "var(--grey)" },
+					}}
 				/>
 				<TextField
 					type="password"
-					placeholder="password"
+					label="Password"
 					onChange={(e) =>
 						setRegisterForm((form) => {
 							form.password = e.target.value;
 							return { ...form };
 						})
 					}
+					sx={{
+						label: { color: "var(--grey)" },
+					}}
 				/>
 				<TextField
 					type="password"
-					placeholder="confirm password"
+					label="Confirm password"
 					onChange={(e) =>
 						setRegisterForm((form) => {
 							form.confirmPassword = e.target.value;
 							return { ...form };
 						})
 					}
+					sx={{
+						label: { color: "var(--grey)" },
+					}}
 				/>
 				<div className="register-form-button-container">
 					<Button

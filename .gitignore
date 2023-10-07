@@ -24,3 +24,5 @@ yarn-error.log*
 
 # large files
 /src/video
+
+.env

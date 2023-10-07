@@ -1,4 +1,4 @@
-import { Link, LinkProps } from "@mui/material";
+import { Link, LinkProps, Typography } from "@mui/material";
 
 interface ExtendedProps extends LinkProps {}
 
@@ -7,9 +7,10 @@ export default function Anchor(props: ExtendedProps) {
 		<Link
 			{...props}
 			variant="body1"
-			sx={{ color: "var(--color-background)" }}
 		>
-			{props.children}
+			<Typography sx={{ color: "primary.contrastText" }}>
+				{props.children}
+			</Typography>
 		</Link>
 	);
 }

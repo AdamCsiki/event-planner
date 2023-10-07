@@ -32,13 +32,22 @@ export default function Header() {
 						Home
 					</Typography>
 				</Link>
-				{!auth.isLoggedIn && (
+				{!auth.isLoggedIn ? (
 					<Link to={"/login"}>
 						<Typography
 							variant="h6"
 							sx={{ color: "primary.contrastText" }}
 						>
 							Login
+						</Typography>
+					</Link>
+				) : (
+					<Link to={`/projects`}>
+						<Typography
+							variant="h6"
+							sx={{ color: "primary.contrastText" }}
+						>
+							Projects
 						</Typography>
 					</Link>
 				)}

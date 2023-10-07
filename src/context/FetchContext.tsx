@@ -46,8 +46,6 @@ export default function FetchProvider(props: ExtendedProps) {
 			},
 		};
 
-		console.log(`fetch(${input}, ${JSON.stringify(newInit)})`);
-
 		return fetch(input, newInit).then((res) => {
 			if (res.status === 498) {
 				const url = basePath + "/auth/refresh";

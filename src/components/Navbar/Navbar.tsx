@@ -6,21 +6,19 @@ import {
 	Typography,
 	ListItem as MuiListItem,
 	ListItemProps,
-	IconButtonProps,
 	Button,
 } from "@mui/material";
-import { Link as RouterLink, LinkProps } from "react-router-dom";
 import styled from "@emotion/styled";
 import IconButton from "../IconButton/IconButton";
-import { PersonRounded, Close } from "@mui/icons-material";
-import { useSelector } from "react-redux";
+import { PersonRounded, Close, Logout } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import LinkButton from "../LinkButton/LinkButton";
 import { HtmlHTMLAttributes } from "react";
-import { getUserByToken } from "../../redux/actions/authActions";
+import { logout } from "../../redux/actions/authActions";
 
 const ListItem = styled(MuiListItem)<ListItemProps>(({ theme }) => ({
 	padding: "1rem",
+	width: "100%",
 }));
 
 interface ExtendedProps extends HtmlHTMLAttributes<HTMLDivElement> {
@@ -31,6 +29,7 @@ export default function Navbar(props: ExtendedProps) {
 	const { onClose } = props;
 
 	const auth = useSelector((state: RootState) => state.auth);
+	const dispatch = useDispatch();
 
 	return (
 		<List
@@ -76,19 +75,28 @@ export default function Navbar(props: ExtendedProps) {
 					<Typography>Projects</Typography>
 				</Link>
 			</ListItem>
+			{!auth.isLoggedIn && (
+				<>
+					<Divider />
+					<ListItem>
+						<Link to={"/register"}>
+							<Typography>Register</Typography>
+						</Link>
+					</ListItem>
+				</>
+			)}
 			<Divider />
 			<ListItem>
-				<Link to={"/register"}>
-					<Typography>Register</Typography>
-				</Link>
-			</ListItem>
-			<ListItem>
 				<Button
+					variant="contained"
+					sx={{
+						width: "100%",
+					}}
 					onClick={() => {
-						getUserByToken(auth.token || "");
+						dispatch(logout());
 					}}
 				>
-					<Typography>GetUser</Typography>
+					<Typography>Logout</Typography>
 				</Button>
 			</ListItem>
 		</List>

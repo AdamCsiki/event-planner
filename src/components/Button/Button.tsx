@@ -4,7 +4,7 @@ import { Button as MuiButton, ButtonProps } from "@mui/material";
 
 const Button = styled(MuiButton)<ButtonProps>(({ theme }: any) => ({
 	color: theme.palette.primary.contrastText,
-	backgroundColor: theme.palette.primary.light,
+	backgroundColor: theme.palette.primary.main,
 	boxShadow: "",
 	":hover": {
 		backgroundColor: theme.palette.primary.dark,

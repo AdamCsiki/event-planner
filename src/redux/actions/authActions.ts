@@ -1,11 +1,19 @@
 import { LoginFormModel } from "../../interfaces/LoginFormModel";
 import { basePath } from "../../api/api";
-import { DEFAULT, LOGIN_FAIL, LOGIN_SUCCESS, SET_USER } from "../types/States";
+import {
+	DEFAULT,
+	LOGIN_FAIL,
+	LOGIN_SUCCESS,
+	LOGOUT,
+	SET_USER,
+} from "../types/States";
 import { AsyncLocalStorage } from "async_hooks";
 import { UserModel } from "../../interfaces/UserModel";
 
 export function login(loginForm: LoginFormModel) {
 	const url = basePath + "/auth/login";
+
+	console.log(url);
 
 	return fetch(url, {
 		method: "POST",
@@ -19,6 +27,9 @@ export function login(loginForm: LoginFormModel) {
 		})
 		.then((data) => {
 			if (data.token) {
+				localStorage.setItem("token", data.token);
+				localStorage.setItem("refresh", data.refresh);
+
 				return {
 					type: LOGIN_SUCCESS,
 					payload: {
@@ -39,6 +50,17 @@ export function login(loginForm: LoginFormModel) {
 			};
 		});
 }
+
+export function logout() {
+	localStorage.removeItem("token");
+	localStorage.removeItem("refresh");
+
+	return {
+		type: LOGOUT,
+	};
+}
+
+export function refreshTokens() {}
 
 export function getUserByToken(token: string) {
 	const url = basePath + "/users/user/token";
