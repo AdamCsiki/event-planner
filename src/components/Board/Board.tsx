@@ -2,9 +2,16 @@ import "./Board.style.css";
 import { TaskModel } from "../../interfaces/TaskModel";
 import Task from "../Task/Task";
 import Button from "../Button/Button";
-import { BsX } from "react-icons/bs";
 import { useState } from "react";
-import { TextField } from "@mui/material";
+import {
+	Divider,
+	IconButton,
+	TextField,
+	Typography,
+	IconButtonProps,
+	Grid,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface ExtendedProps {
 	id: number;
@@ -21,7 +28,7 @@ export default function Board(props: ExtendedProps) {
 	const [newTaskName, setNewTaskName] = useState<string | null>();
 
 	return (
-		<ul
+		<div
 			className="Board"
 			onClick={(e) => {
 				if (e.target === e.currentTarget) {
@@ -31,53 +38,58 @@ export default function Board(props: ExtendedProps) {
 		>
 			<div className="board-header-wrapper">
 				<div className="board-header">
-					<h6>{name}</h6>
-					<button
-						className="Button-x"
+					<Typography>{name}</Typography>
+					<IconButton
 						onClick={() => {
 							removeBoard(id);
 						}}
 					>
-						<BsX
-							fontWeight={"bold"}
-							fontSize={"medium"}
-						/>
-					</button>
+						<CloseIcon />
+					</IconButton>
 				</div>
-				<hr />
+				<Divider />
 			</div>
 
-			{tasks.map((task, index) => {
-				return (
-					<Task
-						key={task.id}
-						task={task}
-						boardId={id}
-						removeTask={removeTask}
-					/>
-				);
-			})}
-			<li>
-				<div className="new-task-wrapper">
-					<TextField
-						placeholder="Task name"
-						onChange={(e) => {
-							setNewTaskName(e.target.value);
-						}}
-					/>
-					<Button
-						onClick={() => {
-							if (newTaskName == null) {
-								addTask("Task");
-								return;
-							}
-							addTask(newTaskName);
-						}}
-					>
-						Add
-					</Button>
-				</div>
-			</li>
-		</ul>
+			<Grid
+				sx={{
+					height: "100%",
+					overflowY: "scroll",
+					scrollbarWidth: "thin",
+				}}
+			>
+				{tasks.map((task, index) => {
+					return (
+						<Task
+							key={task.id}
+							task={task}
+							boardId={id}
+							removeTask={removeTask}
+						/>
+					);
+				})}
+			</Grid>
+
+			<div className="new-task-wrapper">
+				<TextField
+					size="small"
+					placeholder="New Task"
+					onChange={(e) => {
+						setNewTaskName(e.target.value);
+					}}
+				/>
+				<Button
+					size="large"
+					onClick={() => {
+						if (newTaskName == null) {
+							addTask("Task");
+							return;
+						}
+						addTask(newTaskName);
+					}}
+				>
+					Add
+				</Button>
+			</div>
+		</div>
 	);
 }

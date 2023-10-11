@@ -25,7 +25,7 @@ export default function ProjectListItem({
 			}
 		>
 			<ListItemText>
-				<Link to={`/projects/${auth.name}/${project.name}`}>
+				<Link to={`/projects/${project.id}`}>
 					<Typography variant="h5">{project.name}</Typography>
 				</Link>
 			</ListItemText>

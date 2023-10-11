@@ -132,7 +132,7 @@ export default function Project() {
 				})}
 				<div className="project-new-board-container">
 					<TextField
-						placeholder="Board name"
+						placeholder="New Board"
 						onChange={(e) => {
 							setNewBoardName(e.target.value);
 						}}
