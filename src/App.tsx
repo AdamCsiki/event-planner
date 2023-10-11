@@ -4,13 +4,16 @@ import "./global.css";
 import Routing from "./routes/Routing";
 import NotificationProvider from "./context/NotificationContext";
 import NotificationModel from "./interfaces/NotificationModel";
-import ThemeProvider from "./context/ThemeContext";
 import FetchProvider, { FetchContext } from "./context/FetchContext";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import { SET_TOKENS } from "./redux/types/States";
 import { useState } from "react";
 import LoadingPage from "./pages/LoadingPage/LoadingPage";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { ThemeProvider } from "@mui/material";
+import theme from "./Theme";
 
 function App() {
 	const fetchContext = useContext(FetchContext);
@@ -44,14 +47,18 @@ function App() {
 	}
 
 	return (
-		<ThemeProvider>
-			<FetchProvider value={fetchContext}>
-				<NotificationProvider value={{ notification, setNotification }}>
-					<div className="App">
-						<Routing />
-					</div>
-				</NotificationProvider>
-			</FetchProvider>
+		<ThemeProvider theme={theme}>
+			<LocalizationProvider dateAdapter={AdapterDayjs}>
+				<FetchProvider value={fetchContext}>
+					<NotificationProvider
+						value={{ notification, setNotification }}
+					>
+						<div className="App">
+							<Routing />
+						</div>
+					</NotificationProvider>
+				</FetchProvider>
+			</LocalizationProvider>
 		</ThemeProvider>
 	);
 }

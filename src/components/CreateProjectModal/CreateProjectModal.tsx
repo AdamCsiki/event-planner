@@ -1,8 +1,12 @@
 import "./CreateProjectModal.style.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Button from "../Button/Button";
 import { ProjectFormModel } from "../../interfaces/ProjectFormModel";
-import { TextField, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import TextField from "../TextField/TextField";
+import { DatePicker } from "@mui/x-date-pickers";
+import { FetchContext } from "../../context/FetchContext";
+import { basePath } from "../../api/api";
 
 interface ExtendedProps {
 	visible: boolean;
@@ -12,6 +16,30 @@ interface ExtendedProps {
 
 export default function CreateProjectModal(props: ExtendedProps) {
 	const [form, setForm] = useState<ProjectFormModel>({} as ProjectFormModel);
+
+	const fetchPlus = useContext(FetchContext).fetchPlus;
+
+	const putProject = () => {
+		const url = basePath + "/users/user/project";
+
+		return fetchPlus(url, {})
+			.then((res) => {
+				if (res.ok) {
+					return res.json();
+				}
+				throw new Error("FetchPlus failed.");
+			})
+			.then((data) => {
+				console.log(data);
+				return data;
+			})
+			.catch((err) => {
+				console.error(err);
+			})
+			.then((res) => {
+				return res;
+			});
+	};
 
 	return (
 		<div
@@ -27,19 +55,18 @@ export default function CreateProjectModal(props: ExtendedProps) {
 					e.stopPropagation();
 				}}
 			>
-				<div className="button-container">
-					<Typography variant="h5">Create</Typography>
-				</div>
+				<Typography variant="h5">Create</Typography>
 				<div className="create-input-container">
 					<TextField
-						placeholder="Title"
+						label={"Title"}
 						onChange={(e) => {
 							setForm((old_form) => {
-								old_form.title = e.target.value;
+								old_form.name = e.target.value;
 								return old_form;
 							});
 						}}
 					/>
+					<DatePicker label={"Deadline"} />
 				</div>
 				<div className="button-container">
 					<Button

@@ -2,7 +2,8 @@ import { BoardModel } from "./BoardModel";
 
 export interface ProjectModel {
 	id: number;
-	title: string;
+	name: string;
 	details: string;
+	deadLine: string;
 	boards: BoardModel[];
 }

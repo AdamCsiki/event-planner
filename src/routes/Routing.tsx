@@ -40,7 +40,7 @@ export default function Routing() {
 							element={<Events />}
 						/>
 						<Route
-							path=":creator/:projectName"
+							path=":projectName"
 							element={<Event />}
 						/>
 					</Route>

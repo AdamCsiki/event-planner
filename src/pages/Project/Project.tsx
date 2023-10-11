@@ -7,10 +7,10 @@ import Button from "../../components/Button/Button";
 import { TaskModel } from "../../interfaces/TaskModel";
 import Board from "../../components/Board/Board";
 import { BoardModel } from "../../interfaces/BoardModel";
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 
 export default function Project() {
-	const { creator, projectName } = useParams();
+	const { projectName } = useParams();
 
 	const [userProject, setUserProject] = useState<{
 		title: string;
@@ -25,7 +25,7 @@ export default function Project() {
 	const [newBoardName, setNewBoardName] = useState("");
 
 	const getProject = () => {
-		const url = basePath + `/${creator}/${projectName}`;
+		const url = basePath + `/${projectName}`;
 	};
 
 	const createBoard = (name: string) => {
@@ -102,10 +102,15 @@ export default function Project() {
 	return (
 		<div className="Project">
 			<header className="project-header">
-				<h3>{projectName}</h3>
-				<h6>
-					<Link to={""}>{creator}</Link>
-				</h6>
+				<Typography
+					variant="h2"
+					color={"black"}
+				>
+					{projectName}
+				</Typography>
+				<Typography>
+					<Link to={""}></Link>
+				</Typography>
 			</header>
 			<div className="project-boards">
 				{userProject.boards.map((board, index) => {

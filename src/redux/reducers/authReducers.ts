@@ -61,7 +61,7 @@ export default function authReducer(
 		case SET_TOKENS:
 			return { ...state, isLoggedIn: true, token: payload.token };
 		case LOGOUT:
-			return { ...state, ...initialState };
+			return { ...state, ...initialState, isLoggedIn: false };
 		default: {
 			return { ...state };
 		}

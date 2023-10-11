@@ -67,9 +67,6 @@ export default function LoginPage() {
 							return { ...form };
 						});
 					}}
-					sx={{
-						label: { color: "var(--grey)" },
-					}}
 				/>
 				<TextField
 					type="password"
@@ -79,9 +76,6 @@ export default function LoginPage() {
 							form.password = e.target.value;
 							return { ...form };
 						});
-					}}
-					sx={{
-						label: { color: "var(--grey)" },
 					}}
 				/>
 				<div className="login-form-button-container">

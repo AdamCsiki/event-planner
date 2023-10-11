@@ -6,6 +6,7 @@ import Link from "../Link/Link";
 import IconButton from "../IconButton/IconButton";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useState } from "react";
 
 export default function ProjectListItem({
 	project,
@@ -24,9 +25,12 @@ export default function ProjectListItem({
 			}
 		>
 			<ListItemText>
-				<Link to={`/projects/${auth.name}/${project.title}`}>
-					<Typography variant="h5">{project.title}</Typography>
+				<Link to={`/projects/${auth.name}/${project.name}`}>
+					<Typography variant="h5">{project.name}</Typography>
 				</Link>
+			</ListItemText>
+			<ListItemText>
+				<Typography>{project.deadLine}</Typography>
 			</ListItemText>
 		</ListItem>
 	);

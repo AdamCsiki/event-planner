@@ -1,18 +1,16 @@
 import "./Projects.style.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, Fragment } from "react";
 import { ProjectModel } from "../../interfaces/ProjectModel";
 import ProjectListItem from "../../components/ProjectListItem/ProjectListItem";
 import { basePath } from "../../api/api";
 import CreateProjectModal from "../../components/CreateProjectModal/CreateProjectModal";
-import { Divider, List, Typography } from "@mui/material";
+import { Divider, List, ListItem, Typography } from "@mui/material";
 import TextField from "../../components/TextField/TextField";
 import { FetchContext } from "../../context/FetchContext";
 import Button from "../../components/Button/Button";
 
 export default function Projects() {
-	const [projects, setProjects] = useState<ProjectModel[]>([
-		{ id: 0, title: "Test", details: "Details", boards: [] },
-	]);
+	const [projects, setProjects] = useState<ProjectModel[]>([]);
 	const [searchQuery, setSearchQuery] = useState<string | null>(null);
 	const [visible, setVisible] = useState(false);
 
@@ -32,7 +30,10 @@ export default function Projects() {
 			signal: controller.signal,
 		})
 			.then((res) => {
-				return res.json();
+				if (res.ok) {
+					return res.json();
+				}
+				throw new Error("FetchPlus failed.");
 			})
 			.then((data) => {
 				console.log(data);
@@ -59,7 +60,7 @@ export default function Projects() {
 						Projects
 					</Typography>
 					<TextField
-						placeholder="Title / User"
+						placeholder="Title"
 						variant="standard"
 						onChange={(e) => {
 							console.log(e.target.value);
@@ -81,17 +82,30 @@ export default function Projects() {
 					}}
 				>
 					{projects.length === 0 && (
-						<Typography key={0}>No Projects :\</Typography>
+						<ListItem
+							key={1}
+							sx={{
+								width: "100%",
+								height: "100%",
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<Typography
+								key={0}
+								variant="h4"
+							>
+								No Projects :\
+							</Typography>
+						</ListItem>
 					)}
 					{projects.length > 0 &&
 						projects.map((project, index) => (
-							<>
-								<ProjectListItem
-									key={index}
-									project={project}
-								/>
-								<Divider key={Math.random() * 1000} />
-							</>
+							<Fragment key={index}>
+								<ProjectListItem project={project} />
+								<Divider />
+							</Fragment>
 						))}
 				</List>
 				<CreateProjectModal

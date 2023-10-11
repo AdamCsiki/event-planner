@@ -36,18 +36,21 @@ export default function FetchProvider(props: ExtendedProps) {
 		input: RequestInfo | URL,
 		init?: RequestInit | undefined
 	): Promise<Response> => {
-		// TODO NEED TO ENABLE CREDENTIALS IN SPRINGBOOT
 		const newInit: RequestInit = {
 			...init,
 			headers: {
 				...init?.headers,
+
 				credentials: "include",
-				Authentication: `Bearer ${auth.token}`,
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${auth.token}`,
 			},
 		};
 
+		console.log(newInit);
+
 		return fetch(input, newInit).then((res) => {
-			if (res.status === 498) {
+			if (res.status === 403) {
 				const url = basePath + "/auth/refresh";
 
 				return fetch(url, newInit)
@@ -67,16 +70,14 @@ export default function FetchProvider(props: ExtendedProps) {
 							...newInit,
 							headers: {
 								...newInit?.headers,
-								Authentication: `Bearer ${data.token}`,
+								Authorization: `Bearer ${data.token}`,
 							},
 						});
 					})
 					.catch((err) => {
-						console.error(err);
+						// dispatch({ type: REFRESH_FAIL });
 
-						dispatch({ type: REFRESH_FAIL });
-
-						return new Promise(err);
+						return err;
 					});
 			}
 
