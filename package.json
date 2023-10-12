@@ -35,6 +35,7 @@
 	"scripts": {
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d build",
+		"preview": "vite build && vite preview --port 8080",
 		"start": "vite",
 		"build": "tsc && vite build",
 		"serve": "vite preview",
