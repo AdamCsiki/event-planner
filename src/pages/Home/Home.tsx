@@ -1,10 +1,9 @@
 import "./Home.style.css";
 import poster from "../../img/Shotcut_00_00_00_000.png";
-import video from "../../video/pufi_background2.mp4";
 import { Typography } from "@mui/material";
+import { basePath } from "../../api/api";
 
 export default function Home() {
-	// // the background mp4 is a bit too big for github
 	// try {
 	// 	import("../../video/pufi_background2.mp4").then((video_) => {
 	// 		video = video_;
@@ -16,27 +15,19 @@ export default function Home() {
 	return (
 		<div className="Home">
 			<div className="video-wrapper">
-				{video ? (
-					<video
-						id="background-video"
-						poster={poster}
-						loop={true}
-						muted={true}
-						autoPlay={true}
-						playsInline={true}
-					>
-						<source
-							src={video}
-							type="video/mp4"
-						/>
-					</video>
-				) : (
-					<img
-						src={poster}
-						id="background-video"
-						alt="kitty"
+				<video
+					id="background-video"
+					poster={poster}
+					loop={true}
+					muted={true}
+					autoPlay={true}
+					playsInline={true}
+				>
+					<source
+						src={basePath + "/static/video/pufi_background2.mp4"}
+						type="video/mp4"
 					/>
-				)}
+				</video>
 			</div>
 			<div className="home-top">
 				<Typography
