@@ -4,15 +4,18 @@ import { ProjectModel } from "../../interfaces/ProjectModel";
 import ProjectListItem from "../../components/ProjectListItem/ProjectListItem";
 import { basePath } from "../../api/api";
 import CreateProjectModal from "../../components/CreateProjectModal/CreateProjectModal";
-import { Divider, List, ListItem, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import TextField from "../../components/TextField/TextField";
 import { FetchContext } from "../../context/FetchContext";
 import Button from "../../components/Button/Button";
+import ProjectTable from "../../components/ProjectTable/ProjectTable";
 
 export default function Projects() {
 	const [projects, setProjects] = useState<ProjectModel[]>([]);
 	const [searchQuery, setSearchQuery] = useState<string | null>(null);
 	const [visible, setVisible] = useState(false);
+
+	const [loading, setLoading] = useState<boolean>(true);
 
 	const { fetchPlus } = useContext(FetchContext);
 
@@ -41,6 +44,9 @@ export default function Projects() {
 			})
 			.catch((err) => {
 				console.log(err);
+			})
+			.finally(() => {
+				setLoading(false);
 			});
 	};
 
@@ -76,38 +82,9 @@ export default function Projects() {
 						Create
 					</Button>
 				</div>
-				<List
-					sx={{
-						height: "100%",
-					}}
-				>
-					{projects.length === 0 && (
-						<ListItem
-							key={1}
-							sx={{
-								width: "100%",
-								height: "100%",
-								display: "flex",
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						>
-							<Typography
-								key={0}
-								variant="h4"
-							>
-								No Projects :\
-							</Typography>
-						</ListItem>
-					)}
-					{projects.length > 0 &&
-						projects.map((project, index) => (
-							<Fragment key={index}>
-								<ProjectListItem project={project} />
-								<Divider />
-							</Fragment>
-						))}
-				</List>
+
+				<ProjectTable projects={projects} />
+
 				<CreateProjectModal
 					visible={visible}
 					onCancel={() => {

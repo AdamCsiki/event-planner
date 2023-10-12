@@ -30,7 +30,9 @@ export default function ProjectListItem({
 				</Link>
 			</ListItemText>
 			<ListItemText>
-				<Typography>{project.deadLine}</Typography>
+				<Typography>
+					{new Date(project.deadLine).toDateString()}
+				</Typography>
 			</ListItemText>
 		</ListItem>
 	);
