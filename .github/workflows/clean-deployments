@@ -1,3 +1,7 @@
+on:
+  push:
+    branches: ['master']
+
 jobs:
   cleanup:
     runs-on: ubuntu-latest
