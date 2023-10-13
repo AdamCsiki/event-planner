@@ -6,6 +6,7 @@ import {
 	LOGIN_SUCCESS,
 	LOGOUT,
 	SET_USER,
+	SET_TOKENS,
 } from "../types/States";
 import { RegisterFormModel } from "../../interfaces/RegisterFormModel";
 
@@ -96,7 +97,38 @@ export function logout() {
 	};
 }
 
-export function refreshTokens() {}
+export function refreshTokens(token: string) {
+	return fetch(basePath + "/auth/refresh", {
+		method: "POST",
+		headers: { Authorization: `Bearer ${token}` },
+	})
+		.then((res) => {
+			return res.json();
+		})
+		.then((data) => {
+			if (data.token) {
+				localStorage.setItem("token", data.token);
+
+				return {
+					type: SET_TOKENS,
+					payload: {
+						token: data.token,
+					},
+				};
+			}
+
+			return {
+				type: LOGOUT,
+			};
+		})
+		.catch((err) => {
+			console.error(err);
+
+			return {
+				type: LOGOUT,
+			};
+		});
+}
 
 export function getUserByToken(token: string) {
 	const url = basePath + "/users/user/token";

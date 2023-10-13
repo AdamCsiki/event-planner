@@ -4,6 +4,7 @@ import { Link as MuiLink, LinkProps as MuiLinkProps } from "@mui/material";
 
 interface ExtendedProps extends LinkProps {
 	component?: any;
+	sx?: any;
 }
 
 export default function Link(props: ExtendedProps) {

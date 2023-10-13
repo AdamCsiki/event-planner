@@ -14,6 +14,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ThemeProvider } from "@mui/material";
 import theme from "./Theme";
+import { basePath } from "./api/api";
+import { refreshTokens } from "./redux/actions/authActions";
 
 function App() {
 	const fetchContext = useContext(FetchContext);
@@ -31,11 +33,8 @@ function App() {
 		const token = localStorage.getItem("token");
 
 		if (token) {
-			dispatch({
-				type: SET_TOKENS,
-				payload: {
-					token: token,
-				},
+			refreshTokens(token).then((action) => {
+				dispatch(action);
 			});
 		}
 

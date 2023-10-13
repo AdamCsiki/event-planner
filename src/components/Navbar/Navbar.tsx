@@ -13,7 +13,7 @@ import IconButton from "../IconButton/IconButton";
 import { PersonRounded, Close, Logout } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { HtmlHTMLAttributes } from "react";
+import React, { HtmlHTMLAttributes } from "react";
 import { logout } from "../../redux/actions/authActions";
 
 const ListItem = styled(MuiListItem)<ListItemProps>(({ theme }) => ({
@@ -21,12 +21,14 @@ const ListItem = styled(MuiListItem)<ListItemProps>(({ theme }) => ({
 	width: "100%",
 }));
 
-interface ExtendedProps extends HtmlHTMLAttributes<HTMLDivElement> {
+interface ExtendedProps {
+	items: string[];
+	links: string[];
 	onClose: () => void;
 }
 
 export default function Navbar(props: ExtendedProps) {
-	const { onClose } = props;
+	const { items, links } = props;
 
 	const auth = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
@@ -41,43 +43,20 @@ export default function Navbar(props: ExtendedProps) {
 				flexGrow: 1,
 			}}
 		>
-			<ListItem
-				sx={{
-					backgroundColor: "var(--black)",
-					display: "flex",
-					justifyContent: "space-between",
-					alignItems: "center",
-				}}
-			>
-				<Link
-					to={auth.isLoggedIn ? `/user/${auth.id}` : "/login"}
-					onClick={onClose}
-				>
-					<IconButton>
-						<PersonRounded
-							fontSize="large"
-							sx={{
-								color: "primary.contrastText",
-							}}
-						/>
-					</IconButton>
-				</Link>
-
-				<IconButton
-					sx={{ color: "primary.contrastText" }}
-					onClick={onClose}
-				>
-					<Close fontSize="large" />
-				</IconButton>
-			</ListItem>
-			<ListItem>
-				<Link to={"/projects"}>
-					<Typography>Projects</Typography>
-				</Link>
-			</ListItem>
+			{items.map((item, index) => {
+				return (
+					<React.Fragment key={index}>
+						<ListItem>
+							<Link to={links[index]}>
+								<Typography>{item}</Typography>
+							</Link>
+						</ListItem>
+						<Divider />
+					</React.Fragment>
+				);
+			})}
 			{auth.isLoggedIn ? (
 				<>
-					<Divider />
 					<ListItem>
 						<Button
 							variant="contained"
@@ -94,10 +73,9 @@ export default function Navbar(props: ExtendedProps) {
 				</>
 			) : (
 				<>
-					<Divider />
 					<ListItem>
-						<Link to={"/register"}>
-							<Typography>Register</Typography>
+						<Link to={"/login"}>
+							<Typography>Login</Typography>
 						</Link>
 					</ListItem>
 				</>

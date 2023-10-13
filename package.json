@@ -33,7 +33,7 @@
 		"web-vitals": "^2.1.4"
 	},
 	"scripts": {
-		"preview": "vite build && vite preview --port 8080",
+		"preview": "vite build && vite preview --port 8765",
 		"start": "vite",
 		"build": "tsc && vite build",
 		"serve": "vite preview",

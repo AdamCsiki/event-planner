@@ -9,6 +9,7 @@ import { FormControl, TextField, Typography } from "@mui/material";
 import { LOGIN_FAIL, LOGIN_SUCCESS } from "../../redux/types/States";
 import { RootState } from "../../redux/store";
 import { useEffect } from "react";
+import Link from "../../components/Link/Link";
 
 export default function LoginPage() {
 	const auth = useSelector((state: RootState) => state.auth);
@@ -55,7 +56,7 @@ export default function LoginPage() {
 				<Typography
 					variant="h2"
 					mb={3}
-					sx={{ color: "primary.light" }}
+					sx={{ color: "primary.light", fontWeight: 600 }}
 				>
 					Login
 				</Typography>
@@ -78,6 +79,7 @@ export default function LoginPage() {
 						});
 					}}
 				/>
+				<Link to={"/register"}>Make an account?</Link>
 				<div className="login-form-button-container">
 					<Button
 						size="large"

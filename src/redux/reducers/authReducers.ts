@@ -10,7 +10,7 @@ import {
 } from "../types/States";
 
 const initialState: AuthState = {
-	isLoggedIn: false,
+	isLoggedIn: true,
 	id: null,
 	name: null,
 	email: null,
