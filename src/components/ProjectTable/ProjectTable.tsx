@@ -12,9 +12,10 @@ import {
 import { ProjectModel } from "../../interfaces/ProjectModel";
 import { Close, Delete } from "@mui/icons-material";
 import Link from "../Link/Link";
+import ProjectPreviewModel from "../../interfaces/ProjectPreviewModel";
 
 interface ExtendedProps {
-	projects: ProjectModel[];
+	projects: ProjectPreviewModel[];
 }
 
 export default function ProjectTable(props: ExtendedProps) {
