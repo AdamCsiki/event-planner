@@ -19,7 +19,7 @@ import IconButton from "../IconButton/IconButton";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { Theme } from "@emotion/react";
+import { refreshTokens } from "../../redux/actions/authActions";
 
 const navItems = ["Home", "Projects"];
 const navLinks = ["/", "/projects"];
@@ -41,6 +41,7 @@ export default function Header(props: ExtendedProps) {
 		<Box sx={{ display: "flex" }}>
 			<CssBaseline />
 			<AppBar
+				position="sticky"
 				component="nav"
 				sx={{ backgroundColor: "black" }}
 			>

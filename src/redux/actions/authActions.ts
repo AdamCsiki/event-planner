@@ -7,8 +7,22 @@ import {
 	LOGOUT,
 	SET_USER,
 	SET_TOKENS,
+	REFRESH_FAIL,
+	REFRESH_SUCCESS,
 } from "../types/States";
 import { RegisterFormModel } from "../../interfaces/RegisterFormModel";
+
+function setRefreshToken(token: string | null) {
+	var date = new Date();
+	date.setTime(date.getTime() + 10 * 24 * 60 * 60 * 1000);
+
+	document.cookie =
+		"refresh=" +
+		token +
+		"; expires=" +
+		date.toUTCString() +
+		"; path=/project-planner; SameSite=None";
+}
 
 export function login(loginForm: LoginFormModel) {
 	const url = basePath + "/auth/login";
@@ -17,6 +31,7 @@ export function login(loginForm: LoginFormModel) {
 
 	return fetch(url, {
 		method: "POST",
+		credentials: "include",
 		body: JSON.stringify(loginForm),
 		headers: {
 			"Content-Type": "application/json",
@@ -29,6 +44,8 @@ export function login(loginForm: LoginFormModel) {
 			if (data.token) {
 				localStorage.setItem("token", data.token);
 				localStorage.setItem("refresh", data.refresh);
+
+				setRefreshToken(data.refresh);
 
 				return {
 					type: LOGIN_SUCCESS,
@@ -57,6 +74,7 @@ export function register(registerForm: RegisterFormModel) {
 	return fetch(url, {
 		method: "POST",
 		body: JSON.stringify(registerForm),
+		credentials: "include",
 		headers: { "Content-Type": "application/json" },
 	})
 		.then((res) => {
@@ -66,6 +84,8 @@ export function register(registerForm: RegisterFormModel) {
 			if (data.token) {
 				localStorage.setItem("token", data.token);
 				localStorage.setItem("refresh", data.refresh);
+
+				setRefreshToken(data.refresh);
 
 				return {
 					type: LOGIN_SUCCESS,
@@ -92,15 +112,20 @@ export function logout() {
 	localStorage.removeItem("token");
 	localStorage.removeItem("refresh");
 
+	document.cookie =
+		"refresh=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'";
+
 	return {
 		type: LOGOUT,
 	};
 }
 
-export function refreshTokens(token: string) {
+export function refreshTokens() {
+	const token = localStorage.getItem("token");
+
 	return fetch(basePath + "/auth/refresh", {
 		method: "POST",
-		headers: { Authorization: `Bearer ${token}` },
+		credentials: "include",
 	})
 		.then((res) => {
 			return res.json();
@@ -108,9 +133,12 @@ export function refreshTokens(token: string) {
 		.then((data) => {
 			if (data.token) {
 				localStorage.setItem("token", data.token);
+				localStorage.setItem("refresh", data.refresh);
+
+				setRefreshToken(data.refresh);
 
 				return {
-					type: SET_TOKENS,
+					type: REFRESH_SUCCESS,
 					payload: {
 						token: data.token,
 					},
@@ -118,14 +146,14 @@ export function refreshTokens(token: string) {
 			}
 
 			return {
-				type: LOGOUT,
+				type: REFRESH_FAIL,
 			};
 		})
 		.catch((err) => {
 			console.error(err);
 
 			return {
-				type: LOGOUT,
+				type: REFRESH_FAIL,
 			};
 		});
 }
@@ -156,6 +184,7 @@ export function getUserByToken(token: string) {
 		})
 		.catch((err) => {
 			console.error(err);
+
 			return {
 				type: DEFAULT,
 			};

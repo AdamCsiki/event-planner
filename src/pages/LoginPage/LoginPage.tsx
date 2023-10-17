@@ -3,7 +3,7 @@ import { useState } from "react";
 import Button from "../../components/Button/Button";
 import { LoginFormModel } from "../../interfaces/LoginFormModel";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/actions/authActions";
+import { login, refreshTokens } from "../../redux/actions/authActions";
 import { useNavigate } from "react-router-dom";
 import { FormControl, TextField, Typography } from "@mui/material";
 import { LOGIN_FAIL, LOGIN_SUCCESS } from "../../redux/types/States";

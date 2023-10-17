@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { basePath } from "../api/api";
 import { REFRESH_FAIL, REFRESH_SUCCESS } from "../redux/types/States";
 import { RootState } from "../redux/store";
+import { refreshTokens } from "../redux/actions/authActions";
 
 interface ExtendedProps {
 	children: ReactNode;
@@ -38,10 +39,11 @@ export default function FetchProvider(props: ExtendedProps) {
 	): Promise<Response> => {
 		const newInit: RequestInit = {
 			...init,
+			mode: "cors",
+			credentials: "include",
 			headers: {
 				...init?.headers,
 
-				credentials: "include",
 				"Content-Type": "application/json",
 				Authorization: `Bearer ${auth.token}`,
 			},
@@ -53,32 +55,19 @@ export default function FetchProvider(props: ExtendedProps) {
 			if (res.status === 403) {
 				const url = basePath + "/auth/refresh";
 
-				return fetch(url, newInit)
-					.then((res) => {
-						return res.json();
-					})
-					.then((data) => {
-						console.log("Refreshed ", data.token);
-						dispatch({
-							type: REFRESH_SUCCESS,
-							payload: {
-								token: data.token,
-							},
-						});
+				return refreshTokens().then((action) => {
+					dispatch(action);
 
-						return fetch(input, {
-							...newInit,
-							headers: {
-								...newInit?.headers,
-								Authorization: `Bearer ${data.token}`,
-							},
-						});
-					})
-					.catch((err) => {
-						// dispatch({ type: REFRESH_FAIL });
+					const token = localStorage.getItem("token");
 
-						return err;
+					return fetch(input, {
+						...newInit,
+						headers: {
+							...newInit?.headers,
+							Authorization: `Bearer ${token}`,
+						},
 					});
+				});
 			}
 
 			return res;

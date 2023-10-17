@@ -13,8 +13,7 @@ import LoadingPage from "./pages/LoadingPage/LoadingPage";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ThemeProvider } from "@mui/material";
-import theme from "./Theme";
-import { basePath } from "./api/api";
+import { theme } from "./Theme";
 import { refreshTokens } from "./redux/actions/authActions";
 
 function App() {

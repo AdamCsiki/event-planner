@@ -9,9 +9,10 @@ import TextField from "../../components/TextField/TextField";
 import { FetchContext } from "../../context/FetchContext";
 import Button from "../../components/Button/Button";
 import ProjectTable from "../../components/ProjectTable/ProjectTable";
+import ProjectPreviewModel from "../../interfaces/ProjectPreviewModel";
 
 export default function Projects() {
-	const [projects, setProjects] = useState<ProjectModel[]>([]);
+	const [projects, setProjects] = useState<ProjectPreviewModel[]>([]);
 	const [searchQuery, setSearchQuery] = useState<string | null>(null);
 	const [visible, setVisible] = useState(false);
 
@@ -19,18 +20,12 @@ export default function Projects() {
 
 	const { fetchPlus } = useContext(FetchContext);
 
-	const searchClick = () => {
+	const getProjects = () => {
 		let url = basePath + "/projects";
 		const controller = new AbortController();
 
-		if (searchQuery) {
-			url += "?" + new URLSearchParams({ query: searchQuery });
-		}
-
 		fetchPlus(url, {
 			method: "GET",
-			mode: "cors",
-			signal: controller.signal,
 		})
 			.then((res) => {
 				if (res.ok) {
@@ -50,8 +45,17 @@ export default function Projects() {
 			});
 	};
 
+	const searchProjects = () => {
+		if (searchQuery) {
+			return projects.filter((project) => {
+				return project.name.includes(searchQuery);
+			});
+		}
+		return;
+	};
+
 	useEffect(() => {
-		searchClick();
+		getProjects();
 	}, []);
 
 	return (
@@ -69,11 +73,10 @@ export default function Projects() {
 						placeholder="Title"
 						variant="standard"
 						onChange={(e) => {
-							console.log(e.target.value);
 							setSearchQuery(e.target.value);
 						}}
 					/>
-					<Button onClick={() => searchClick()}>Search</Button>
+					<Button onClick={() => searchProjects()}>Search</Button>
 					<Button
 						onClick={() => {
 							setVisible(true);
@@ -81,6 +84,7 @@ export default function Projects() {
 					>
 						Create
 					</Button>
+					<Button onClick={() => getProjects()}>Refresh</Button>
 				</div>
 
 				<ProjectTable projects={projects} />

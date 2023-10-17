@@ -36,6 +36,7 @@ export default function Navbar(props: ExtendedProps) {
 	return (
 		<List
 			sx={{
+				backgroundColor: "black",
 				minWidth: "16rem",
 				width: "25vw",
 				maxWidth: "24rem",

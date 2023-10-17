@@ -75,9 +75,6 @@ export default function RegisterPage() {
 							return { ...form };
 						})
 					}
-					sx={{
-						label: { color: "var(--grey)" },
-					}}
 				/>
 				<TextField
 					required
@@ -88,9 +85,6 @@ export default function RegisterPage() {
 							return { ...form };
 						})
 					}
-					sx={{
-						label: { color: "var(--grey)" },
-					}}
 				/>
 				<TextField
 					required
@@ -101,9 +95,6 @@ export default function RegisterPage() {
 							return { ...form };
 						})
 					}
-					sx={{
-						label: { color: "var(--grey)" },
-					}}
 				/>
 				<TextField
 					required
@@ -115,9 +106,6 @@ export default function RegisterPage() {
 							return { ...form };
 						})
 					}
-					sx={{
-						label: { color: "var(--grey)" },
-					}}
 				/>
 				<TextField
 					required
@@ -129,9 +117,6 @@ export default function RegisterPage() {
 							return { ...form };
 						})
 					}
-					sx={{
-						label: { color: "var(--grey)" },
-					}}
 				/>
 				<div className="register-form-button-container">
 					<Button

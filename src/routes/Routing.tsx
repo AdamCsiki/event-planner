@@ -10,7 +10,7 @@ import UserPage from "../pages/UserPage/UserPage";
 
 export default function Routing() {
 	return (
-		<HashRouter>
+		<BrowserRouter basename="/project-planner/">
 			<Routes>
 				<Route element={<Layout />}>
 					<Route
@@ -46,6 +46,6 @@ export default function Routing() {
 					</Route>
 				</Route>
 			</Routes>
-		</HashRouter>
+		</BrowserRouter>
 	);
 }

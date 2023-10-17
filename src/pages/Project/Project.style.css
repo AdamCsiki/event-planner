@@ -10,7 +10,7 @@
 }
 
 .project-header {
-	background-color: var(--color-secondary);
+	background-color: var(--black);
 	color: var(--color-background);
 
 	width: 100%;

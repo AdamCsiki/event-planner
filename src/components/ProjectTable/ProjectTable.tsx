@@ -42,9 +42,9 @@ export default function ProjectTable(props: ExtendedProps) {
 				</TableHead>
 				<TableBody>
 					{projects &&
-						projects.map((project) => {
+						projects.map((project, index) => {
 							return (
-								<TableRow>
+								<TableRow key={index}>
 									<TableCell>
 										<Link to={`/projects/${project.id}`}>
 											<Typography>
