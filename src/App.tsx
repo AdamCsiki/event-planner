@@ -32,7 +32,7 @@ function App() {
 		const token = localStorage.getItem("token");
 
 		if (token) {
-			refreshTokens(token).then((action) => {
+			refreshTokens().then((action) => {
 				dispatch(action);
 			});
 		}
