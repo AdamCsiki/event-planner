@@ -17,9 +17,9 @@ import {
 import { AccountCircle, Dehaze, Menu as MenuIcon } from "@mui/icons-material";
 import IconButton from "../IconButton/IconButton";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { refreshTokens } from "../../redux/actions/authActions";
+import { logout, refreshTokens } from "../../redux/actions/authActions";
 
 const navItems = ["Home", "Projects"];
 const navLinks = ["/", "/projects"];
@@ -30,6 +30,7 @@ interface ExtendedProps {
 
 export default function Header(props: ExtendedProps) {
 	const auth = useSelector((state: RootState) => state.auth);
+	const dispatch = useDispatch();
 
 	const [navOpen, setNavOpen] = useState<boolean>(false);
 
@@ -79,13 +80,25 @@ export default function Header(props: ExtendedProps) {
 								{item}
 							</Link>
 						))}
-						{!auth.isLoggedIn && (
+						{!auth.isLoggedIn ? (
 							<Link
 								to={"/login"}
 								sx={{ color: "primary.contrastText" }}
 							>
 								Login
 							</Link>
+						) : (
+							<Button
+								variant="contained"
+								sx={{
+									width: "100%",
+								}}
+								onClick={() => {
+									dispatch(logout());
+								}}
+							>
+								<Typography>Logout</Typography>
+							</Button>
 						)}
 					</Box>
 					<IconButton

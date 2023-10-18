@@ -43,14 +43,14 @@ export default function CreateProjectModal(props: ExtendedProps) {
 
 	return (
 		<div
-			className="create-modal-background"
+			className="modal-background"
 			style={{ visibility: props.visible ? "visible" : "hidden" }}
 			onClick={(e) => {
 				props.onCancel();
 			}}
 		>
 			<div
-				className="create-modal-container"
+				className="modal-container"
 				onClick={(e) => {
 					e.stopPropagation();
 				}}
