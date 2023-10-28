@@ -1,4 +1,6 @@
 export interface ProjectFormModel {
 	name: string;
-	deadLine: Date;
+	details: string;
+	startDate: string;
+	deadLine: string;
 }

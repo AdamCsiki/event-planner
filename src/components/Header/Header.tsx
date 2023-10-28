@@ -20,6 +20,14 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { logout, refreshTokens } from "../../redux/actions/authActions";
+import {
+	fetchPlus,
+	getCookie,
+	removeCookie,
+	setCookie,
+} from "../../api/fetchPlus";
+import { basePath } from "../../api/api";
+import { blue, orange, red } from "@mui/material/colors";
 
 const navItems = ["Home", "Projects"];
 const navLinks = ["/", "/projects"];
@@ -54,14 +62,33 @@ export default function Header(props: ExtendedProps) {
 							justifyContent: "flex-start",
 						}}
 					>
-						<Link to={"/"}>
+						<Link
+							to={"/"}
+							sx={{
+								textDecorationThickness: 3,
+								opacity: 1,
+							}}
+						>
 							<Typography
-								sx={{ color: "primary.contrastText" }}
+								sx={{
+									color: "primary.contrastText",
+									borderRadius: 4,
+									padding: 1,
+								}}
 								variant="h4"
 							>
 								EPlanner
 							</Typography>
 						</Link>
+						{/* <Button
+							onClick={() => {
+								fetchPlus(basePath + "/auth/refresh", {
+									method: "POST",
+								});
+							}}
+						>
+							Refresh
+						</Button> */}
 					</Box>
 
 					<Box

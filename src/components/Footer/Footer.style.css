@@ -1,7 +1,7 @@
 .Footer {
 	z-index: 2;
 
-	background-color: var(--black);
+	background-color: black;
 	color: var(--color-background);
 
 	width: 100%;

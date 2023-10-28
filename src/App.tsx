@@ -7,7 +7,6 @@ import NotificationModel from "./interfaces/NotificationModel";
 import FetchProvider, { FetchContext } from "./context/FetchContext";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/store";
-import { SET_TOKENS } from "./redux/types/States";
 import { useState } from "react";
 import LoadingPage from "./pages/LoadingPage/LoadingPage";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -40,22 +39,18 @@ function App() {
 		setLoading(false);
 	}, []);
 
-	if (loading) {
+	if (!theme) {
 		return <LoadingPage />;
 	}
 
 	return (
 		<ThemeProvider theme={theme}>
 			<LocalizationProvider dateAdapter={AdapterDayjs}>
-				<FetchProvider value={fetchContext}>
-					<NotificationProvider
-						value={{ notification, setNotification }}
-					>
-						<div className="App">
-							<Routing />
-						</div>
-					</NotificationProvider>
-				</FetchProvider>
+				<NotificationProvider value={{ notification, setNotification }}>
+					<div className="App">
+						<Routing />
+					</div>
+				</NotificationProvider>
 			</LocalizationProvider>
 		</ThemeProvider>
 	);

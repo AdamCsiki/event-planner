@@ -1,12 +1,14 @@
 import "./CreateProjectModal.style.css";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Button from "../Button/Button";
 import { ProjectFormModel } from "../../interfaces/ProjectFormModel";
-import { Typography } from "@mui/material";
+import { Box, Modal, Typography } from "@mui/material";
 import TextField from "../TextField/TextField";
 import { DatePicker } from "@mui/x-date-pickers";
-import { FetchContext } from "../../context/FetchContext";
 import { basePath } from "../../api/api";
+import { fetchPlus } from "../../api/fetchPlus";
+import dayjs from "dayjs";
+import { CheckBox } from "@mui/icons-material";
 
 interface ExtendedProps {
 	visible: boolean;
@@ -15,14 +17,17 @@ interface ExtendedProps {
 }
 
 export default function CreateProjectModal(props: ExtendedProps) {
+	const { visible, onCancel, onFinish } = props;
+
 	const [form, setForm] = useState<ProjectFormModel>({} as ProjectFormModel);
 
-	const fetchPlus = useContext(FetchContext).fetchPlus;
-
 	const putProject = () => {
-		const url = basePath + "/users/user/project";
+		const url = basePath + "/projects/add";
 
-		return fetchPlus(url, {})
+		return fetchPlus(url, {
+			method: "PUT",
+			body: JSON.stringify(form),
+		})
 			.then((res) => {
 				if (res.ok) {
 					return res.json();
@@ -41,20 +46,16 @@ export default function CreateProjectModal(props: ExtendedProps) {
 			});
 	};
 
+	useEffect(() => {
+		console.log(form);
+	}, [form]);
+
 	return (
-		<div
-			className="modal-background"
-			style={{ visibility: props.visible ? "visible" : "hidden" }}
-			onClick={(e) => {
-				props.onCancel();
-			}}
+		<Modal
+			open={visible}
+			onClose={onCancel}
 		>
-			<div
-				className="modal-container"
-				onClick={(e) => {
-					e.stopPropagation();
-				}}
-			>
+			<div className="modal-container">
 				<Typography variant="h5">Create</Typography>
 				<div className="create-input-container">
 					<TextField
@@ -62,29 +63,68 @@ export default function CreateProjectModal(props: ExtendedProps) {
 						onChange={(e) => {
 							setForm((old_form) => {
 								old_form.name = e.target.value;
-								return old_form;
+								return { ...old_form };
 							});
 						}}
 					/>
-					<DatePicker label={"Deadline"} />
+					<TextField
+						label={"Details"}
+						multiline
+					/>
+					<Box sx={{ display: "flex", gap: 2 }}>
+						<DatePicker
+							label={"Start date"}
+							format="DD/MM/YYYY"
+							defaultValue={dayjs(new Date())}
+							onChange={(value: string | null) => {
+								setForm((old_form) => {
+									if (value) {
+										old_form.deadLine = new Date(
+											value
+										).toLocaleDateString();
+									}
+
+									return { ...old_form };
+								});
+							}}
+						/>
+						<DatePicker
+							label={"Deadline"}
+							format="DD/MM/YYYY"
+							onChange={(value: string | null) => {
+								setForm((old_form) => {
+									if (value) {
+										old_form.deadLine = new Date(
+											value
+										).toLocaleDateString();
+									}
+
+									return { ...old_form };
+								});
+							}}
+						/>
+					</Box>
 				</div>
+
 				<div className="button-container">
 					<Button
 						onClick={(e) => {
-							props.onCancel();
+							onCancel();
 						}}
 					>
 						Cancel
 					</Button>
 					<Button
 						onClick={(e) => {
-							props.onFinish();
+							putProject().then(() => {
+								onFinish();
+							});
 						}}
 					>
-						Finish
+						Create
 					</Button>
 				</div>
 			</div>
-		</div>
+		</Modal>
 	);
 }

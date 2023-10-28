@@ -15,7 +15,7 @@ let theme = createTheme({
 		},
 		divider: "#050b14",
 		background: {
-			paper: "#050b14",
+			paper: "#f1f1f1",
 			default: "#050b14",
 		},
 	},

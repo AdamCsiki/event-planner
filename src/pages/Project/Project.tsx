@@ -1,31 +1,37 @@
 import "./Project.style.css";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { basePath } from "../../api/api";
 import Link from "../../components/Link/Link";
 import Button from "../../components/Button/Button";
 import { TaskModel } from "../../interfaces/TaskModel";
 import Board from "../../components/Board/Board";
 import { BoardModel } from "../../interfaces/BoardModel";
-import { TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
+import { ProjectModel } from "../../interfaces/ProjectModel";
+import { fetchPlus } from "../../api/fetchPlus";
+import { getDaysUntilDate } from "../../services/DateService";
+import { red } from "@mui/material/colors";
 
 export default function Project() {
-	const { projectName } = useParams();
+	const { projectId } = useParams();
+	const location = useLocation();
 
-	const [userProject, setUserProject] = useState<{
-		title: string;
-		details: string;
-		boards: BoardModel[];
-	}>({
-		title: "Miau",
-		details: "This contains some information about the project",
-		boards: [],
-	});
+	const navigate = useNavigate();
 
+	const [userProject, setUserProject] = useState<Partial<ProjectModel>>();
 	const [newBoardName, setNewBoardName] = useState("");
 
 	const getProject = () => {
-		const url = basePath + `/${projectName}`;
+		const url = basePath + `/projects/${projectId}`;
+
+		return fetchPlus(url, { method: "GET" })
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				setUserProject(data);
+			});
 	};
 
 	const createBoard = (name: string) => {
@@ -40,7 +46,9 @@ export default function Project() {
 		};
 
 		setUserProject((current) => {
-			current.boards.push(newBoard);
+			if (current?.boards) {
+				current.boards.push(newBoard);
+			}
 
 			return {
 				...current,
@@ -50,17 +58,22 @@ export default function Project() {
 
 	const removeBoard = (boardId: number) => {
 		setUserProject((current) => {
-			const index = current.boards.findIndex(
-				(board) => board.id === boardId
-			);
-
-			current.boards.splice(index, 1);
+			if (current?.boards) {
+				const index = current.boards.findIndex(
+					(board) => board.id === boardId
+				);
+				current.boards.splice(index, 1);
+			}
 
 			return { ...current };
 		});
 	};
 
 	const createTask = (boardId: number) => {
+		if (!userProject) {
+			return;
+		}
+
 		const newTask: TaskModel = {
 			id: Math.floor(Math.random() * 10000),
 			name: "Task",
@@ -70,11 +83,13 @@ export default function Project() {
 		};
 
 		setUserProject((current) => {
-			const index = current.boards.findIndex(
-				(board) => board.id === boardId
-			);
+			if (current?.boards) {
+				const index = current.boards.findIndex(
+					(board) => board.id === boardId
+				);
 
-			current.boards[index].tasks.push(newTask);
+				current.boards[index].tasks.push(newTask);
+			}
 
 			return {
 				...current,
@@ -83,53 +98,55 @@ export default function Project() {
 	};
 
 	const removeTask = (boardId: number, id: number) => {
-		setUserProject((current) => {
-			const boardIndex = current.boards.findIndex(
-				(board) => board.id === boardId
-			);
-			const index = current.boards[boardIndex].tasks.findIndex(
-				(task) => task.id === id
-			);
+		if (!userProject) {
+			return;
+		}
 
-			if (index !== -1) {
-				current.boards[boardIndex].tasks.splice(index, 1);
+		setUserProject((current) => {
+			if (current?.boards) {
+				const boardIndex = current.boards.findIndex(
+					(board) => board.id === boardId
+				);
+				const index = current.boards[boardIndex].tasks.findIndex(
+					(task) => task.id === id
+				);
+
+				if (index !== -1) {
+					current.boards[boardIndex].tasks.splice(index, 1);
+				}
 			}
 
 			return { ...current };
 		});
 	};
 
-	return (
-		<div className="Project">
-			<header className="project-header">
-				<Typography
-					variant="h2"
-					color={"black"}
-				>
-					{projectName}
-				</Typography>
-				<Typography>
-					<Link to={""}></Link>
-				</Typography>
-			</header>
-			<div className="project-boards">
-				{userProject.boards.map((board, index) => {
-					const { id, name, tasks } = board;
+	useEffect(() => {
+		getProject().catch((err) => {
+			navigate("/projects");
+		});
+	}, []);
 
-					return (
-						<Board
-							id={id}
-							key={id}
-							name={name}
-							tasks={tasks}
-							addTask={() => {
-								createTask(id);
-							}}
-							removeTask={removeTask}
-							removeBoard={removeBoard}
-						/>
-					);
-				})}
+	return (
+		userProject && (
+			<div className="project-boards">
+				{userProject.boards &&
+					userProject.boards.map((board, index) => {
+						const { id, name, tasks } = board;
+
+						return (
+							<Board
+								id={id}
+								key={id}
+								name={name}
+								tasks={tasks}
+								addTask={() => {
+									createTask(id);
+								}}
+								removeTask={removeTask}
+								removeBoard={removeBoard}
+							/>
+						);
+					})}
 				<div className="project-new-board-container">
 					<TextField
 						placeholder="New Board"
@@ -141,11 +158,12 @@ export default function Project() {
 						onClick={() => {
 							createBoard(newBoardName);
 						}}
+						size="large"
 					>
 						Add
 					</Button>
 				</div>
 			</div>
-		</div>
+		)
 	);
 }

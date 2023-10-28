@@ -6,10 +6,11 @@ import { basePath } from "../../api/api";
 import CreateProjectModal from "../../components/CreateProjectModal/CreateProjectModal";
 import { Typography } from "@mui/material";
 import TextField from "../../components/TextField/TextField";
-import { FetchContext } from "../../context/FetchContext";
 import Button from "../../components/Button/Button";
 import ProjectTable from "../../components/ProjectTable/ProjectTable";
 import ProjectPreviewModel from "../../interfaces/ProjectPreviewModel";
+import { fetchPlus } from "../../api/fetchPlus";
+import AreYouSureModal from "../../components/AreYouSureModal/AreYouSureModal";
 
 export default function Projects() {
 	const [projects, setProjects] = useState<ProjectPreviewModel[]>([]);
@@ -17,8 +18,6 @@ export default function Projects() {
 	const [visible, setVisible] = useState(false);
 
 	const [loading, setLoading] = useState<boolean>(true);
-
-	const { fetchPlus } = useContext(FetchContext);
 
 	const getProjects = () => {
 		let url = basePath + "/projects";
@@ -87,7 +86,10 @@ export default function Projects() {
 					<Button onClick={() => getProjects()}>Refresh</Button>
 				</div>
 
-				<ProjectTable projects={projects} />
+				<ProjectTable
+					projects={projects}
+					refreshTable={getProjects}
+				/>
 
 				<CreateProjectModal
 					visible={visible}
@@ -96,6 +98,7 @@ export default function Projects() {
 					}}
 					onFinish={() => {
 						setVisible(false);
+						getProjects();
 					}}
 				/>
 			</div>

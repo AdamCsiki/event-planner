@@ -11,18 +11,7 @@ import {
 	REFRESH_SUCCESS,
 } from "../types/States";
 import { RegisterFormModel } from "../../interfaces/RegisterFormModel";
-
-function setRefreshToken(token: string | null) {
-	var date = new Date();
-	date.setTime(date.getTime() + 10 * 24 * 60 * 60 * 1000);
-
-	document.cookie =
-		"refresh=" +
-		token +
-		"; expires=" +
-		date.toUTCString() +
-		"; path=/project-planner; SameSite=None";
-}
+import { setCookie } from "../../api/fetchPlus";
 
 export function login(loginForm: LoginFormModel) {
 	const url = basePath + "/auth/login";
@@ -41,16 +30,16 @@ export function login(loginForm: LoginFormModel) {
 			return res.json();
 		})
 		.then((data) => {
-			if (data.token) {
-				localStorage.setItem("token", data.token);
-				localStorage.setItem("refresh", data.refresh);
+			const { refresh, token } = data;
 
-				setRefreshToken(data.refresh);
+			if (token) {
+				localStorage.setItem("token", token);
+				localStorage.setItem("refresh", refresh);
 
 				return {
 					type: LOGIN_SUCCESS,
 					payload: {
-						token: data.token,
+						token: token,
 					},
 				};
 			}
@@ -81,11 +70,11 @@ export function register(registerForm: RegisterFormModel) {
 			return res.json();
 		})
 		.then((data) => {
-			if (data.token) {
-				localStorage.setItem("token", data.token);
-				localStorage.setItem("refresh", data.refresh);
+			const { refresh, token } = data;
 
-				setRefreshToken(data.refresh);
+			if (token) {
+				localStorage.setItem("token", token);
+				localStorage.setItem("refresh", refresh);
 
 				return {
 					type: LOGIN_SUCCESS,
@@ -112,8 +101,9 @@ export function logout() {
 	localStorage.removeItem("token");
 	localStorage.removeItem("refresh");
 
+	// Clearing the cookie by sending it back in time
 	document.cookie =
-		"refresh=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'";
+		"refresh=; Path=/project-planner; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'";
 
 	return {
 		type: LOGOUT,
@@ -121,8 +111,6 @@ export function logout() {
 }
 
 export function refreshTokens() {
-	const token = localStorage.getItem("token");
-
 	return fetch(basePath + "/auth/refresh", {
 		method: "POST",
 		credentials: "include",
@@ -131,16 +119,16 @@ export function refreshTokens() {
 			return res.json();
 		})
 		.then((data) => {
-			if (data.token) {
-				localStorage.setItem("token", data.token);
-				localStorage.setItem("refresh", data.refresh);
+			const { refresh, token } = data;
 
-				setRefreshToken(data.refresh);
+			if (token) {
+				localStorage.setItem("token", token);
+				localStorage.setItem("refresh", refresh);
 
 				return {
 					type: REFRESH_SUCCESS,
 					payload: {
-						token: data.token,
+						token: token,
 					},
 				};
 			}
@@ -188,5 +176,15 @@ export function getUserByToken(token: string) {
 			return {
 				type: DEFAULT,
 			};
+		});
+}
+
+export function isBackendOnline() {
+	const url = basePath + "/auth/online";
+
+	return fetch(url, { method: "GET" })
+		.then((res) => res.json())
+		.then((data) => {
+			return data.isOnline;
 		});
 }

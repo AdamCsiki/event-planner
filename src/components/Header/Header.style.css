@@ -1,8 +1,6 @@
 .Header {
 	z-index: 10;
 
-	background-color: var(--black);
-
 	padding: 1rem;
 
 	display: flex;
