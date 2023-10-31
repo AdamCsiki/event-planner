@@ -38,7 +38,7 @@ export function ProjectLayout() {
 		});
 	}, []);
 
-	return (
+	return userProject ? (
 		<div className="Project">
 			<header className="project-header">
 				<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -80,6 +80,10 @@ export function ProjectLayout() {
 					days
 				</Typography>
 			</header>
+			<Outlet />
+		</div>
+	) : (
+		<div>
 			<Outlet />
 		</div>
 	);

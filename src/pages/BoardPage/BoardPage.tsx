@@ -56,51 +56,62 @@ export default function BoardPage() {
 		});
 	}, []);
 
-	return (
-		userProject && (
-			<div className="project-boards">
-				{userProject.boards &&
-					userProject.boards.map((board, index) => {
-						const { id, name, tasks } = board;
+	return userProject ? (
+		<div className="project-boards">
+			{userProject.boards &&
+				userProject.boards.map((board, index) => {
+					const { id, name, tasks } = board;
 
-						return (
-							<Board
-								id={id}
-								key={id}
-								name={name}
-								tasks={tasks}
-								refreshProject={getProject}
-							/>
-						);
-					})}
-				<Box
+					return (
+						<Board
+							id={id}
+							key={id}
+							name={name}
+							tasks={tasks}
+							refreshProject={getProject}
+						/>
+					);
+				})}
+			<Box
+				sx={{
+					mt: 2,
+					display: "flex",
+					gap: 1,
+				}}
+			>
+				<TextField
+					variant="standard"
+					placeholder="New Board"
+					value={newBoardName}
 					sx={{
-						mt: 2,
-						display: "flex",
-						gap: 1,
+						minWidth: "8rem",
 					}}
+					onChange={(e) => {
+						setNewBoardName(e.target.value);
+					}}
+				/>
+				<Button
+					onClick={() => {
+						createBoard(newBoardName);
+					}}
+					size="small"
 				>
-					<TextField
-						variant="standard"
-						placeholder="New Board"
-						value={newBoardName}
-						sx={{
-							minWidth: "8rem",
-						}}
-						onChange={(e) => {
-							setNewBoardName(e.target.value);
-						}}
-					/>
-					<Button
-						onClick={() => {
-							createBoard(newBoardName);
-						}}
-						size="small"
-					>
-						Add
-					</Button>
-				</Box>
-			</div>
-		)
+					Add
+				</Button>
+			</Box>
+		</div>
+	) : (
+		<Box
+			sx={{
+				width: "100%",
+				height: "100%",
+
+				display: "flex",
+				justifyContent: "center",
+				alignContent: "center",
+			}}
+		>
+			<Typography>No project found.</Typography>
+		</Box>
 	);
 }
