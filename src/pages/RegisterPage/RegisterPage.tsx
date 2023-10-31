@@ -33,14 +33,7 @@ export default function RegisterPage() {
 			return;
 		}
 
-		register(registerForm)
-			.then((action) => {
-				dispatch(action);
-				navigate("/projects");
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		register(registerForm);
 	};
 
 	useEffect(() => {
