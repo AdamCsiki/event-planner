@@ -6,7 +6,7 @@ import LoginPage from "../pages/LoginPage/LoginPage";
 import RegisterPage from "../pages/RegisterPage/RegisterPage";
 import AuthenticatedRoute from "./AuthenticatedRoute";
 import UserPage from "../pages/UserPage/UserPage";
-import Board from "../pages/BoardPage/BoardPage";
+import BoardPage from "../pages/BoardPage/BoardPage";
 import { ProjectLayout } from "../Layouts/Project/ProjectLayout";
 
 export default function Routing() {
@@ -46,11 +46,11 @@ export default function Routing() {
 						>
 							<Route
 								index
-								element={<Board />}
+								element={<BoardPage />}
 							/>
 							<Route
 								path="board"
-								element={<Board />}
+								element={<BoardPage />}
 							/>
 							<Route path="details" />
 						</Route>
