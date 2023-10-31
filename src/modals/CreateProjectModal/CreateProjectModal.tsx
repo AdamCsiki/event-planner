@@ -1,14 +1,13 @@
 import "./CreateProjectModal.style.css";
 import { useState, useContext, useEffect } from "react";
-import Button from "../Button/Button";
+import Button from "../../components/Button/Button";
 import { ProjectFormModel } from "../../interfaces/ProjectFormModel";
 import { Box, Modal, Typography } from "@mui/material";
-import TextField from "../TextField/TextField";
+import TextField from "../../components/TextField/TextField";
 import { DatePicker } from "@mui/x-date-pickers";
 import { basePath } from "../../api/api";
 import { fetchPlus } from "../../api/fetchPlus";
 import dayjs from "dayjs";
-import { CheckBox } from "@mui/icons-material";
 
 interface ExtendedProps {
 	visible: boolean;
@@ -19,7 +18,9 @@ interface ExtendedProps {
 export default function CreateProjectModal(props: ExtendedProps) {
 	const { visible, onCancel, onFinish } = props;
 
-	const [form, setForm] = useState<ProjectFormModel>({} as ProjectFormModel);
+	const [form, setForm] = useState<ProjectFormModel>({
+		startDate: dayjs(new Date()).format("DD/MM/YYYY"),
+	} as ProjectFormModel);
 
 	const putProject = () => {
 		const url = basePath + "/projects/add";
@@ -35,7 +36,6 @@ export default function CreateProjectModal(props: ExtendedProps) {
 				throw new Error("FetchPlus failed.");
 			})
 			.then((data) => {
-				console.log(data);
 				return data;
 			})
 			.catch((err) => {
@@ -70,18 +70,23 @@ export default function CreateProjectModal(props: ExtendedProps) {
 					<TextField
 						label={"Details"}
 						multiline
+						onChange={(e) => {
+							setForm((old_form) => {
+								old_form.details = e.target.value;
+								return { ...old_form };
+							});
+						}}
 					/>
 					<Box sx={{ display: "flex", gap: 2 }}>
 						<DatePicker
 							label={"Start date"}
-							format="DD/MM/YYYY"
-							defaultValue={dayjs(new Date())}
+							format="DD/MM/YYYY" // @ts-ignore
+							value={dayjs(new Date())}
 							onChange={(value: string | null) => {
 								setForm((old_form) => {
 									if (value) {
-										old_form.deadLine = new Date(
-											value
-										).toLocaleDateString();
+										old_form.startDate =
+											dayjs(value).format("DD/MM/YYYY");
 									}
 
 									return { ...old_form };

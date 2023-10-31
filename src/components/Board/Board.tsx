@@ -2,7 +2,7 @@ import "./Board.style.css";
 import { TaskModel } from "../../interfaces/TaskModel";
 import Task from "../Task/Task";
 import Button from "../Button/Button";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
 	Divider,
 	IconButton,
@@ -10,51 +10,76 @@ import {
 	Typography,
 	IconButtonProps,
 	Grid,
+	Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import {
+	createTaskRequest,
+	deleteBoardRequest,
+} from "../../requests/projectRequests";
+import { useParams } from "react-router-dom";
+import { ConfirmContext } from "../../context/ConfirmContext";
 
 interface ExtendedProps {
-	id: number;
+	id: string;
 	name: string;
 	tasks: TaskModel[];
-	addTask: (name: string) => void;
-	removeTask: (boardId: number, index: number) => void;
-	removeBoard: (boardId: number) => void;
+	refreshProject: () => void;
 }
 
 export default function Board(props: ExtendedProps) {
-	const { id, name, tasks, addTask, removeTask, removeBoard } = props;
+	const { projectId } = useParams();
+	const { id, name, tasks, refreshProject } = props;
+
+	const { setOpen, setAcceptFunction } = useContext(ConfirmContext);
 
 	const [newTaskName, setNewTaskName] = useState<string | null>();
 
+	const removeBoard = (boardId: string) => {
+		deleteBoardRequest(projectId!, boardId).finally(() => {
+			refreshProject();
+			setNewTaskName("");
+		});
+	};
+
+	const addTask = (boardId: string, taskName: string) => {
+		createTaskRequest(projectId!, boardId, taskName).finally(() => {
+			refreshProject();
+			setNewTaskName("");
+		});
+	};
+
 	return (
-		<div
-			className="Board"
-			onClick={(e) => {
-				if (e.target === e.currentTarget) {
-					console.log("Board press");
-				}
-			}}
-		>
-			<div className="board-header-wrapper">
-				<div className="board-header">
+		<div className="Board">
+			<Box>
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+					}}
+				>
 					<Typography>{name}</Typography>
 					<IconButton
 						onClick={() => {
-							removeBoard(id);
+							setAcceptFunction(() => {
+								removeBoard(id);
+							});
+							setOpen(true);
 						}}
 					>
 						<CloseIcon />
 					</IconButton>
-				</div>
+				</Box>
 				<Divider />
-			</div>
+			</Box>
 
 			<Grid
 				sx={{
 					height: "100%",
-					overflowY: "scroll",
+					overflowY: "auto",
 					scrollbarWidth: "thin",
+					padding: "0 1rem",
 				}}
 			>
 				{tasks.map((task, index) => {
@@ -63,7 +88,7 @@ export default function Board(props: ExtendedProps) {
 							key={task.id}
 							task={task}
 							boardId={id}
-							removeTask={removeTask}
+							refreshProject={refreshProject}
 						/>
 					);
 				})}
@@ -73,18 +98,20 @@ export default function Board(props: ExtendedProps) {
 				<TextField
 					size="small"
 					placeholder="New Task"
+					variant="standard"
+					value={newTaskName}
 					onChange={(e) => {
 						setNewTaskName(e.target.value);
 					}}
 				/>
 				<Button
-					size="large"
+					size="small"
 					onClick={() => {
 						if (newTaskName == null) {
-							addTask("Task");
+							addTask(id, "Task");
 							return;
 						}
-						addTask(newTaskName);
+						addTask(id, newTaskName);
 					}}
 				>
 					Add

@@ -1,5 +1,6 @@
-import { LoginFormModel } from "../../interfaces/LoginFormModel";
-import { basePath } from "../../api/api";
+import { basePath } from "../api/api";
+import { LoginFormModel } from "../interfaces/LoginFormModel";
+import { RegisterFormModel } from "../interfaces/RegisterFormModel";
 import {
 	DEFAULT,
 	LOGIN_FAIL,
@@ -9,9 +10,9 @@ import {
 	SET_TOKENS,
 	REFRESH_FAIL,
 	REFRESH_SUCCESS,
-} from "../types/States";
-import { RegisterFormModel } from "../../interfaces/RegisterFormModel";
-import { setCookie } from "../../api/fetchPlus";
+} from "../redux/types/States";
+import { store } from "../redux/store";
+import { fetchPlus } from "../api/fetchPlus";
 
 export function login(loginForm: LoginFormModel) {
 	const url = basePath + "/auth/login";
@@ -33,27 +34,22 @@ export function login(loginForm: LoginFormModel) {
 			const { refresh, token } = data;
 
 			if (token) {
-				localStorage.setItem("token", token);
-				localStorage.setItem("refresh", refresh);
-
-				return {
+				store.dispatch({
 					type: LOGIN_SUCCESS,
 					payload: {
 						token: token,
 					},
-				};
+				});
 			}
 
-			return {
+			store.dispatch({
 				type: LOGIN_FAIL,
-			};
+			});
 		})
 		.catch((err) => {
-			console.error(err);
-
-			return {
+			store.dispatch({
 				type: LOGIN_FAIL,
-			};
+			});
 		});
 }
 
@@ -73,27 +69,22 @@ export function register(registerForm: RegisterFormModel) {
 			const { refresh, token } = data;
 
 			if (token) {
-				localStorage.setItem("token", token);
-				localStorage.setItem("refresh", refresh);
-
-				return {
+				store.dispatch({
 					type: LOGIN_SUCCESS,
 					payload: {
 						token: data.token,
 					},
-				};
+				});
 			}
 
-			return {
+			store.dispatch({
 				type: LOGIN_FAIL,
-			};
+			});
 		})
 		.catch((err) => {
-			console.error(err);
-
-			return {
+			store.dispatch({
 				type: LOGIN_FAIL,
-			};
+			});
 		});
 }
 
@@ -105,9 +96,9 @@ export function logout() {
 	document.cookie =
 		"refresh=; Path=/project-planner; Expires=Thu, 01 Jan 1970 00:00:01 GMT;'";
 
-	return {
+	store.dispatch({
 		type: LOGOUT,
-	};
+	});
 }
 
 export function refreshTokens() {
@@ -125,66 +116,47 @@ export function refreshTokens() {
 				localStorage.setItem("token", token);
 				localStorage.setItem("refresh", refresh);
 
-				return {
+				store.dispatch({
 					type: REFRESH_SUCCESS,
 					payload: {
 						token: token,
 					},
-				};
+				});
 			}
 
-			return {
+			store.dispatch({
 				type: REFRESH_FAIL,
-			};
+			});
 		})
 		.catch((err) => {
-			console.error(err);
-
-			return {
+			store.dispatch({
 				type: REFRESH_FAIL,
-			};
+			});
 		});
 }
 
 export function getUserByToken(token: string) {
 	const url = basePath + "/users/user/token";
 
-	return fetch(url, {
+	return fetchPlus(url, {
 		method: "GET",
-		headers: {
-			Authentication: `Bearer ${token}`,
-			"Content-Type": "application/json",
-		},
 	})
 		.then((res) => {
 			return res.json();
 		})
 		.then((data) => {
-			console.log(JSON.stringify(data));
-			return {
+			store.dispatch({
 				type: SET_USER,
 				payload: {
 					id: data.id,
 					name: data.name,
 					email: data.email,
 				},
-			};
+			});
 		})
 		.catch((err) => {
-			console.error(err);
-
-			return {
+			store.dispatch({
 				type: DEFAULT,
-			};
-		});
-}
-
-export function isBackendOnline() {
-	const url = basePath + "/auth/online";
-
-	return fetch(url, { method: "GET" })
-		.then((res) => res.json())
-		.then((data) => {
-			return data.isOnline;
+			});
 		});
 }

@@ -8,6 +8,8 @@
 
 * {
 	box-sizing: border-box;
+	scrollbar-width: thin;
+	scrollbar-color: "primary";
 }
 
 body,

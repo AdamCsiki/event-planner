@@ -1,28 +1,37 @@
-import { Divider, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import "./Footer.style.css";
 import { LinkedIn, Mail, Phone } from "@mui/icons-material";
 import Anchor from "../Anchor/Anchor";
 
-export default function Footer() {
+export function Footer() {
 	return (
-		<footer className="Footer">
-			<div>
-				<Typography fontWeight={700}>Contact</Typography>
+		<Box className="Footer">
+			<Box>
+				<Typography
+					fontSize="small"
+					fontWeight={800}
+				>
+					Contact
+				</Typography>
 				<div className="footer-contact-info">
-					<Phone />
-					<Typography>+40 757 810 434</Typography>
+					<Phone fontSize="small" />
+					<Typography variant="caption">+40 757 810 434</Typography>
 				</div>
 				<div className="footer-contact-info">
-					<Mail />
-					<Typography>adam.csiki01@gmail.com</Typography>
+					<Mail fontSize="small" />
+					<Typography variant="caption">
+						adam.csiki01@gmail.com
+					</Typography>
 				</div>
 				<div className="footer-contact-info">
-					<LinkedIn />
+					<LinkedIn fontSize="small" />
 					<Anchor href="https://www.linkedin.com/in/csiki-adam-csaba-283931226/">
-						linkedin.com/in/csiki-adam-csaba
+						<Typography variant="caption">
+							linkedin.com/in/csiki-adam-csaba
+						</Typography>
 					</Anchor>
 				</div>
-			</div>
-		</footer>
+			</Box>
+		</Box>
 	);
 }

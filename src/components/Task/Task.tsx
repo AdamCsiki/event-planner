@@ -2,6 +2,7 @@ import "./Task.style.css";
 import { HtmlHTMLAttributes, Key } from "react";
 import { TaskModel } from "../../interfaces/TaskModel";
 import {
+	Box,
 	Button,
 	ButtonBase,
 	Card,
@@ -10,34 +11,56 @@ import {
 	Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { blueGrey } from "@mui/material/colors";
+import { useParams } from "react-router-dom";
+import { deleteTaskRequest } from "../../requests/projectRequests";
 
 interface ExtendedProps extends HtmlHTMLAttributes<HTMLDivElement> {
+	boardId: string;
 	task: TaskModel;
-	boardId: number;
-	removeTask: (boardId: number, index: number) => void;
+	refreshProject: () => void;
 }
 
 export default function Task(props: ExtendedProps) {
-	const { task, boardId, removeTask } = props;
+	const { projectId } = useParams();
+
+	const { task, boardId, refreshProject } = props;
+
+	const removeTask = (boardId: string, taskId: string) => {
+		deleteTaskRequest(projectId!, boardId, taskId).then(() => {
+			refreshProject();
+		});
+	};
 
 	return (
-		<Card
+		<Box
 			sx={{
+				minWidth: "10rem",
+
+				backgroundColor: blueGrey[50],
+
 				display: "flex",
 				flexDirection: "column",
 
 				textAlign: "initial",
 				width: "100%",
 
-				margin: "0.75rem 0",
+				margin: "0 0 1.5rem 0",
 
-				gap: "1rem",
+				borderBottomRightRadius: 10,
+				borderBottomLeftRadius: 10,
 			}}
 		>
+			<LinearProgress
+				color="primary"
+				value={50}
+				variant="determinate"
+			/>
 			<div className="task-header">
 				<Typography
 					color={"black"}
-					sx={{ padding: "0.5rem" }}
+					sx={{ marginLeft: "0.5rem" }}
+					variant="subtitle2"
 				>
 					{task.name}
 				</Typography>
@@ -50,14 +73,10 @@ export default function Task(props: ExtendedProps) {
 					<CloseIcon />
 				</IconButton>
 			</div>
-			<LinearProgress
-				color="primary"
-				value={Math.random() * 100}
-				variant="determinate"
-			/>
+
 			<Button sx={{ padding: "0.5rem" }}>
 				<Typography>Open</Typography>
 			</Button>
-		</Card>
+		</Box>
 	);
 }

@@ -2,12 +2,12 @@ import { HashRouter, BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout, { LayoutNoFooter } from "../Layouts/Layout/Layout";
 import Home from "../pages/Home/Home";
 import Events from "../pages/Projects/Projects";
-import Event from "../pages/Project/Project";
+import Event from "../pages/BoardPage/BoardPage";
 import LoginPage from "../pages/LoginPage/LoginPage";
 import RegisterPage from "../pages/RegisterPage/RegisterPage";
 import AuthenticatedRoute from "./AuthenticatedRoute";
 import UserPage from "../pages/UserPage/UserPage";
-import Project from "../pages/Project/Project";
+import Board from "../pages/BoardPage/BoardPage";
 import { ProjectLayout } from "../Layouts/Project/ProjectLayout";
 
 export default function Routing() {
@@ -47,11 +47,11 @@ export default function Routing() {
 						>
 							<Route
 								index
-								element={<Project />}
+								element={<Board />}
 							/>
 							<Route
 								path="board"
-								element={<Project />}
+								element={<Board />}
 							/>
 							<Route path="details" />
 						</Route>

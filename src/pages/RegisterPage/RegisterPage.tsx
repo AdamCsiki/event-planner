@@ -2,13 +2,12 @@ import "./RegisterPage.style.css";
 import Button from "../../components/Button/Button";
 import { useState } from "react";
 import { RegisterFormModel } from "../../interfaces/RegisterFormModel";
-import { basePath } from "../../api/api";
 import { FormControl, TextField, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
-import { register } from "../../redux/actions/authActions";
+import { register } from "../../requests/authRequests";
 
 export default function RegisterPage() {
 	const auth = useSelector((state: RootState) => state.auth);

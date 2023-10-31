@@ -1,4 +1,7 @@
+import { Dispatch } from "redux";
 import { basePath } from "./api";
+import { store } from "../redux/store";
+import { REFRESH_SUCCESS } from "../redux/types/States";
 
 const refreshURL = basePath + "/auth/refresh";
 
@@ -81,6 +84,14 @@ export function fetchPlus(
 
 					localStorage.setItem("refresh", refresh);
 					localStorage.setItem("token", token);
+
+					store.dispatch({
+						type: REFRESH_SUCCESS,
+						payload: {
+							isLoggedIn: true,
+							token: token,
+						},
+					});
 
 					return fetch(input, {
 						...newInit,

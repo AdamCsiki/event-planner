@@ -4,7 +4,6 @@ import "./global.css";
 import Routing from "./routes/Routing";
 import NotificationProvider from "./context/NotificationContext";
 import NotificationModel from "./interfaces/NotificationModel";
-import FetchProvider, { FetchContext } from "./context/FetchContext";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import { useState } from "react";
@@ -14,11 +13,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "./Theme";
 import { refreshTokens } from "./redux/actions/authActions";
+import { ConfirmProvider } from "./context/ConfirmContext";
+import { isOnline } from "./requests/generalRequests";
 
 function App() {
-	const fetchContext = useContext(FetchContext);
-
 	const [loading, setLoading] = useState(true);
+	const [online, setOnline] = useState(false);
 
 	const auth = useSelector((state: RootState) => state.auth);
 	const dispatch = useDispatch();
@@ -27,18 +27,6 @@ function App() {
 		{} as NotificationModel
 	);
 
-	useEffect(() => {
-		const token = localStorage.getItem("token");
-
-		if (token) {
-			refreshTokens().then((action) => {
-				dispatch(action);
-			});
-		}
-
-		setLoading(false);
-	}, []);
-
 	if (!theme) {
 		return <LoadingPage />;
 	}
@@ -46,11 +34,11 @@ function App() {
 	return (
 		<ThemeProvider theme={theme}>
 			<LocalizationProvider dateAdapter={AdapterDayjs}>
-				<NotificationProvider value={{ notification, setNotification }}>
+				<ConfirmProvider>
 					<div className="App">
 						<Routing />
 					</div>
-				</NotificationProvider>
+				</ConfirmProvider>
 			</LocalizationProvider>
 		</ThemeProvider>
 	);

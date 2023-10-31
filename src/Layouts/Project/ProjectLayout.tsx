@@ -8,6 +8,8 @@ import { ProjectModel } from "../../interfaces/ProjectModel";
 import { useEffect, useState } from "react";
 import { fetchPlus } from "../../api/fetchPlus";
 import { basePath } from "../../api/api";
+import IconButton from "../../components/IconButton/IconButton";
+import { ArrowBack } from "@mui/icons-material";
 
 export function ProjectLayout() {
 	const { projectId } = useParams();
@@ -37,7 +39,17 @@ export function ProjectLayout() {
 		userProject && (
 			<div className="Project">
 				<header className="project-header">
-					<Typography variant="h5">{userProject.name}</Typography>
+					<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+						<IconButton
+							onClick={() => {
+								navigate("/projects");
+							}}
+							color="primary"
+						>
+							<ArrowBack />
+						</IconButton>
+						<Typography variant="h5">{userProject.name}</Typography>
+					</Box>
 					<Box sx={{ display: "flex", gap: 1 }}>
 						<Link
 							sx={{ color: "white" }}
@@ -52,14 +64,17 @@ export function ProjectLayout() {
 							Details
 						</Link>
 					</Box>
-					<Typography sx={{ display: "flex" }}>
+					<Typography
+						sx={{ display: { xs: "none", sm: "flex" } }}
+						component={"span"}
+					>
 						Deadline in{" "}
 						<Typography
 							color={red[500]}
 							sx={{ mr: 0.5, ml: 0.5 }}
 						>
 							{getDaysUntilDate(userProject.deadLine!)}
-						</Typography>{" "}
+						</Typography>
 						days
 					</Typography>
 				</header>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Button from "../../components/Button/Button";
 import { LoginFormModel } from "../../interfaces/LoginFormModel";
 import { useDispatch, useSelector } from "react-redux";
-import { login, refreshTokens } from "../../redux/actions/authActions";
+import { login, refreshTokens } from "../../requests/authRequests";
 import { useNavigate } from "react-router-dom";
 import { FormControl, TextField, Typography } from "@mui/material";
 import { LOGIN_FAIL, LOGIN_SUCCESS } from "../../redux/types/States";
@@ -24,19 +24,7 @@ export default function LoginPage() {
 	);
 
 	const submit = () => {
-		login(loginForm)
-			.then((action) => {
-				dispatch(action);
-				if (action.type === LOGIN_FAIL) {
-					setErrorMsg("Email or password are incorrect");
-				}
-				if (action.type === LOGIN_SUCCESS) {
-					navigate("/");
-				}
-			})
-			.catch((err) => {
-				setErrorMsg(err);
-			});
+		login(loginForm);
 	};
 
 	useEffect(() => {

@@ -12,6 +12,7 @@ export default function Link(props: ExtendedProps) {
 		<MuiLink
 			{...props}
 			component={props.component || RouterLink}
+			sx={{ ...props.sx, textDecorationColor: "primary" }}
 		>
 			{props.children}
 		</MuiLink>

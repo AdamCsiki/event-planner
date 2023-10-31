@@ -13,8 +13,9 @@ import IconButton from "../IconButton/IconButton";
 import { PersonRounded, Close, Logout } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import React, { HtmlHTMLAttributes } from "react";
-import { logout } from "../../redux/actions/authActions";
+import { HtmlHTMLAttributes, useContext, Fragment } from "react";
+import { logout } from "../../requests/authRequests";
+import { ConfirmContext } from "../../context/ConfirmContext";
 
 const ListItem = styled(MuiListItem)<ListItemProps>(({ theme }) => ({
 	padding: "1rem",
@@ -28,10 +29,10 @@ interface ExtendedProps {
 }
 
 export default function Navbar(props: ExtendedProps) {
+	const { setOpen, setAcceptFunction } = useContext(ConfirmContext);
 	const { items, links } = props;
 
 	const auth = useSelector((state: RootState) => state.auth);
-	const dispatch = useDispatch();
 
 	return (
 		<List
@@ -46,14 +47,14 @@ export default function Navbar(props: ExtendedProps) {
 		>
 			{items.map((item, index) => {
 				return (
-					<React.Fragment key={index}>
+					<Fragment key={index}>
 						<ListItem>
 							<Link to={links[index]}>
 								<Typography>{item}</Typography>
 							</Link>
 						</ListItem>
 						<Divider />
-					</React.Fragment>
+					</Fragment>
 				);
 			})}
 			{auth.isLoggedIn ? (
@@ -65,7 +66,10 @@ export default function Navbar(props: ExtendedProps) {
 								width: "100%",
 							}}
 							onClick={() => {
-								dispatch(logout());
+								setAcceptFunction(() => {
+									logout();
+								});
+								setOpen(true);
 							}}
 						>
 							<Typography>Logout</Typography>

@@ -1,6 +1,6 @@
 .Board {
 	border: 1px solid var(--color-secondary);
-	border-radius: 2px;
+	border-radius: 4px;
 
 	box-shadow: 2px 2px 0px 0px var(--color-secondary);
 

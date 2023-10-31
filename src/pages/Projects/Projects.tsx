@@ -3,14 +3,17 @@ import { useContext, useEffect, useState, Fragment } from "react";
 import { ProjectModel } from "../../interfaces/ProjectModel";
 import ProjectListItem from "../../components/ProjectListItem/ProjectListItem";
 import { basePath } from "../../api/api";
-import CreateProjectModal from "../../components/CreateProjectModal/CreateProjectModal";
+import CreateProjectModal from "../../modals/CreateProjectModal/CreateProjectModal";
 import { Typography } from "@mui/material";
 import TextField from "../../components/TextField/TextField";
 import Button from "../../components/Button/Button";
 import ProjectTable from "../../components/ProjectTable/ProjectTable";
 import ProjectPreviewModel from "../../interfaces/ProjectPreviewModel";
 import { fetchPlus } from "../../api/fetchPlus";
-import AreYouSureModal from "../../components/AreYouSureModal/AreYouSureModal";
+import AreYouSureModal from "../../modals/AreYouSureModal/AreYouSureModal";
+import IconButton from "../../components/IconButton/IconButton";
+import { Create, PlusOne, Refresh, Search } from "@mui/icons-material";
+import { getProjectsRequest } from "../../requests/projectRequests";
 
 export default function Projects() {
 	const [projects, setProjects] = useState<ProjectPreviewModel[]>([]);
@@ -18,31 +21,6 @@ export default function Projects() {
 	const [visible, setVisible] = useState(false);
 
 	const [loading, setLoading] = useState<boolean>(true);
-
-	const getProjects = () => {
-		let url = basePath + "/projects";
-		const controller = new AbortController();
-
-		fetchPlus(url, {
-			method: "GET",
-		})
-			.then((res) => {
-				if (res.ok) {
-					return res.json();
-				}
-				throw new Error("FetchPlus failed.");
-			})
-			.then((data) => {
-				console.log(data);
-				setProjects(data);
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	};
 
 	const searchProjects = () => {
 		if (searchQuery) {
@@ -53,6 +31,12 @@ export default function Projects() {
 		return;
 	};
 
+	const getProjects = () => {
+		getProjectsRequest().then((data) => {
+			setProjects(data);
+		});
+	};
+
 	useEffect(() => {
 		getProjects();
 	}, []);
@@ -61,13 +45,6 @@ export default function Projects() {
 		<div className="ProjectsPage">
 			<div className="projects-container">
 				<div className="projects-header">
-					<Typography
-						variant="h4"
-						component="h1"
-						sx={{ color: "primary.main" }}
-					>
-						Projects
-					</Typography>
 					<TextField
 						placeholder="Title"
 						variant="standard"
@@ -75,15 +52,19 @@ export default function Projects() {
 							setSearchQuery(e.target.value);
 						}}
 					/>
-					<Button onClick={() => searchProjects()}>Search</Button>
-					<Button
+					<IconButton onClick={() => searchProjects()}>
+						<Search />
+					</IconButton>
+					<IconButton
 						onClick={() => {
 							setVisible(true);
 						}}
 					>
-						Create
-					</Button>
-					<Button onClick={() => getProjects()}>Refresh</Button>
+						<Create />
+					</IconButton>
+					<IconButton onClick={() => getProjects()}>
+						<Refresh />
+					</IconButton>
 				</div>
 
 				<ProjectTable
