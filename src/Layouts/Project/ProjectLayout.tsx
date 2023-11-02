@@ -10,12 +10,14 @@ import { fetchPlus } from "../../api/fetchPlus";
 import { basePath } from "../../api/api";
 import IconButton from "../../components/IconButton/IconButton";
 import { ArrowBack } from "@mui/icons-material";
+import { editProjectRequest } from "../../requests/projectRequests";
+import { EditableText } from "../../components/EditableText/EditableText";
 
 export function ProjectLayout() {
 	const { projectId } = useParams();
 	const navigate = useNavigate();
 
-	const [userProject, setUserProject] = useState<Partial<ProjectModel>>();
+	const [userProject, setUserProject] = useState<ProjectModel>();
 
 	const getProject = () => {
 		const url = basePath + `/projects/${projectId}`;
@@ -30,6 +32,12 @@ export function ProjectLayout() {
 			.catch(() => {
 				navigate("/projects");
 			});
+	};
+
+	const editProject = (project: ProjectModel) => {
+		editProjectRequest(project).then(() => {
+			getProject();
+		});
 	};
 
 	useEffect(() => {
@@ -50,7 +58,20 @@ export function ProjectLayout() {
 					>
 						<ArrowBack />
 					</IconButton>
-					<Typography variant="h5">{userProject!.name}</Typography>
+					<EditableText
+						variant="h5"
+						sx={{ color: "white" }}
+						inputProps={{
+							style: {
+								color: "white",
+							},
+						}}
+						onFinish={(value) => {
+							editProject({ ...userProject, name: value });
+						}}
+					>
+						{userProject.name}
+					</EditableText>
 				</Box>
 				<Box sx={{ display: "flex", gap: 1 }}>
 					<Link

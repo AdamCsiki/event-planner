@@ -1,10 +1,19 @@
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import "./LoadingPage.style.css";
 
 export default function LoadingPage() {
 	return (
-		<div className="LoadingPage">
+		<Box
+			sx={{
+				height: "100%",
+				width: "100%",
+
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+			}}
+		>
 			<CircularProgress />
-		</div>
+		</Box>
 	);
 }

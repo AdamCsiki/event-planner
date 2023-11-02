@@ -15,7 +15,9 @@ import { red } from "@mui/material/colors";
 import {
 	createBoardRequest,
 	createTaskRequest,
+	editProjectRequest,
 } from "../../requests/projectRequests";
+import LoadingPage from "../LoadingPage/LoadingPage";
 
 export default function BoardPage() {
 	const { projectId } = useParams();
@@ -39,6 +41,12 @@ export default function BoardPage() {
 			});
 	};
 
+	const editProject = (project: ProjectModel) => {
+		editProjectRequest(project).then(() => {
+			getProject();
+		});
+	};
+
 	const createBoard = (name: string) => {
 		if (name === null || name === undefined || name.length === 0) {
 			return;
@@ -56,25 +64,24 @@ export default function BoardPage() {
 		});
 	}, []);
 
-	return userProject ? (
+	if (!userProject) {
+		return <LoadingPage />;
+	}
+
+	return (
 		<div className="project-boards">
 			{userProject.boards &&
 				userProject.boards.map((board, index) => {
-					const { id, name, tasks } = board;
-
 					return (
 						<Board
-							id={id}
-							key={id}
-							name={name}
-							tasks={tasks}
+							key={index}
+							board={board}
 							refreshProject={getProject}
 						/>
 					);
 				})}
 			<Box
 				sx={{
-					mt: 2,
 					display: "flex",
 					gap: 1,
 				}}
@@ -100,18 +107,5 @@ export default function BoardPage() {
 				</Button>
 			</Box>
 		</div>
-	) : (
-		<Box
-			sx={{
-				width: "100%",
-				height: "100%",
-
-				display: "flex",
-				justifyContent: "center",
-				alignContent: "center",
-			}}
-		>
-			<Typography>No project found.</Typography>
-		</Box>
 	);
 }

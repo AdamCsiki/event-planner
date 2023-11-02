@@ -1,5 +1,11 @@
 import "./Task.style.css";
-import { HtmlHTMLAttributes, Key } from "react";
+import {
+	HtmlHTMLAttributes,
+	Key,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
 import { TaskModel } from "../../interfaces/TaskModel";
 import {
 	Box,
@@ -13,7 +19,13 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { blueGrey } from "@mui/material/colors";
 import { useParams } from "react-router-dom";
-import { deleteTaskRequest } from "../../requests/projectRequests";
+import {
+	deleteTaskRequest,
+	editTaskRequest,
+	openTaskRequest,
+} from "../../requests/projectRequests";
+import { ConfirmContext } from "../../context/ConfirmContext";
+import { EditableText } from "../EditableText/EditableText";
 
 interface ExtendedProps extends HtmlHTMLAttributes<HTMLDivElement> {
 	boardId: string;
@@ -23,11 +35,24 @@ interface ExtendedProps extends HtmlHTMLAttributes<HTMLDivElement> {
 
 export default function Task(props: ExtendedProps) {
 	const { projectId } = useParams();
+	const { setOpen, setAcceptFunction } = useContext(ConfirmContext);
 
 	const { task, boardId, refreshProject } = props;
 
-	const removeTask = (boardId: string, taskId: string) => {
+	const removeTask = (taskId: string) => {
 		deleteTaskRequest(projectId!, boardId, taskId).then(() => {
+			refreshProject();
+		});
+	};
+
+	const openTask = (taskId: string) => {
+		openTaskRequest(projectId!, boardId, taskId).then(() => {
+			refreshProject();
+		});
+	};
+
+	const editTask = (task: TaskModel) => {
+		editTaskRequest(projectId!, boardId, task).then(() => {
 			refreshProject();
 		});
 	};
@@ -57,25 +82,62 @@ export default function Task(props: ExtendedProps) {
 				variant="determinate"
 			/>
 			<div className="task-header">
-				<Typography
-					color={"black"}
-					sx={{ marginLeft: "0.5rem" }}
-					variant="subtitle2"
+				<EditableText
+					onFinish={(value) => {
+						editTask({ ...task, name: value });
+					}}
 				>
 					{task.name}
-				</Typography>
+				</EditableText>
 				<IconButton
 					className="Button-x"
 					onClick={() => {
-						removeTask(boardId, task.id);
+						setAcceptFunction(() => {
+							removeTask(task.id);
+						});
+						setOpen(true);
 					}}
 				>
-					<CloseIcon />
+					<CloseIcon fontSize="small" />
 				</IconButton>
 			</div>
 
-			<Button sx={{ padding: "0.5rem" }}>
-				<Typography>Open</Typography>
+			{task.open && (
+				<Box
+					sx={{
+						minHeight: "fit-content",
+
+						p: 1,
+
+						borderTop: "1px solid #00000020",
+						borderBottom: "1px solid #00000020",
+
+						display: "flex",
+					}}
+				>
+					<EditableText
+						textFieldVariant="outlined"
+						onFinish={(value) => {
+							editTask({ ...task, details: value });
+						}}
+						sx={{
+							minWidth: "100%",
+						}}
+					>
+						{task.details.length == 0 ? "Details" : task.details}
+					</EditableText>
+				</Box>
+			)}
+
+			<Button
+				size="small"
+				sx={{ padding: "0.5rem" }}
+				color={task.open ? "error" : "info"}
+				onClick={() => {
+					openTask(task.id);
+				}}
+			>
+				{task.open ? "CLOSE" : "OPEN"}
 			</Button>
 		</Box>
 	);

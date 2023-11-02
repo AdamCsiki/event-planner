@@ -6,5 +6,6 @@ export interface TaskModel {
 	progress: number;
 	details: string;
 	taken: boolean;
+	open: boolean;
 	user: UserModel | null;
 }

@@ -16,20 +16,21 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
 	createTaskRequest,
 	deleteBoardRequest,
+	editBoardRequest,
 } from "../../requests/projectRequests";
 import { useParams } from "react-router-dom";
 import { ConfirmContext } from "../../context/ConfirmContext";
+import { BoardModel } from "../../interfaces/BoardModel";
+import { EditableText } from "../EditableText/EditableText";
 
 interface ExtendedProps {
-	id: string;
-	name: string;
-	tasks: TaskModel[];
+	board: BoardModel;
 	refreshProject: () => void;
 }
 
 export default function Board(props: ExtendedProps) {
 	const { projectId } = useParams();
-	const { id, name, tasks, refreshProject } = props;
+	const { board, refreshProject } = props;
 
 	const { setOpen, setAcceptFunction } = useContext(ConfirmContext);
 
@@ -42,6 +43,12 @@ export default function Board(props: ExtendedProps) {
 		});
 	};
 
+	const editBoard = (board: BoardModel) => {
+		editBoardRequest(projectId!, board).finally(() => {
+			refreshProject();
+		});
+	};
+
 	const addTask = (boardId: string, taskName: string) => {
 		createTaskRequest(projectId!, boardId, taskName).finally(() => {
 			refreshProject();
@@ -51,27 +58,32 @@ export default function Board(props: ExtendedProps) {
 
 	return (
 		<div className="Board">
-			<Box>
-				<Box
-					sx={{
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "center",
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					ml: 1,
+					mr: 1,
+				}}
+			>
+				<EditableText
+					onFinish={(value) => {
+						editBoard({ ...board, name: value });
 					}}
 				>
-					<Typography>{name}</Typography>
-					<IconButton
-						onClick={() => {
-							setAcceptFunction(() => {
-								removeBoard(id);
-							});
-							setOpen(true);
-						}}
-					>
-						<CloseIcon />
-					</IconButton>
-				</Box>
-				<Divider />
+					{board.name}
+				</EditableText>
+				<IconButton
+					onClick={() => {
+						setAcceptFunction(() => {
+							removeBoard(board.id);
+						});
+						setOpen(true);
+					}}
+				>
+					<CloseIcon />
+				</IconButton>
 			</Box>
 
 			<Grid
@@ -82,19 +94,26 @@ export default function Board(props: ExtendedProps) {
 					padding: "0 1rem",
 				}}
 			>
-				{tasks.map((task, index) => {
+				{board.tasks.map((task, index) => {
 					return (
 						<Task
 							key={task.id}
 							task={task}
-							boardId={id}
+							boardId={board.id}
 							refreshProject={refreshProject}
 						/>
 					);
 				})}
 			</Grid>
 
-			<div className="new-task-wrapper">
+			<Box
+				sx={{
+					ml: 2,
+					mr: 2,
+					display: "flex",
+					gap: 1,
+				}}
+			>
 				<TextField
 					size="small"
 					placeholder="New Task"
@@ -108,15 +127,15 @@ export default function Board(props: ExtendedProps) {
 					size="small"
 					onClick={() => {
 						if (newTaskName == null) {
-							addTask(id, "Task");
+							addTask(board.id, "Task");
 							return;
 						}
-						addTask(id, newTaskName);
+						addTask(board.id, newTaskName);
 					}}
 				>
 					Add
 				</Button>
-			</div>
+			</Box>
 		</div>
 	);
 }

@@ -14,7 +14,6 @@ import Link from "../../components/Link/Link";
 export default function LoginPage() {
 	const auth = useSelector((state: RootState) => state.auth);
 
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const [errorMsg, setErrorMsg] = useState<string>("");
@@ -24,14 +23,18 @@ export default function LoginPage() {
 	);
 
 	const submit = () => {
-		login(loginForm);
+		return login(loginForm).then((isLoggedIn) => {
+			if (isLoggedIn) {
+				navigate("/projects");
+			}
+		});
 	};
 
 	useEffect(() => {
 		if (auth.isLoggedIn) {
 			navigate(-1);
 		}
-	}, []);
+	}, [auth.isLoggedIn]);
 
 	return (
 		<div className="LoginPage">

@@ -1,5 +1,5 @@
 .Board {
-	border: 1px solid var(--color-secondary);
+	border-left: 3px solid black;
 	border-radius: 4px;
 
 	box-shadow: 2px 2px 0px 0px var(--color-secondary);
@@ -13,7 +13,7 @@
 	max-width: 100%;
 	max-height: 95%;
 
-	padding: 0.5rem 1rem 1rem 1rem;
+	/* padding: 0.5rem 1rem 1rem 1rem; */
 
 	display: flex;
 	flex-direction: column;

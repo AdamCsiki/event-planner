@@ -40,16 +40,20 @@ export function login(loginForm: LoginFormModel) {
 						token: token,
 					},
 				});
+				return true;
 			}
 
 			store.dispatch({
 				type: LOGIN_FAIL,
 			});
+
+			return false;
 		})
 		.catch((err) => {
 			store.dispatch({
 				type: LOGIN_FAIL,
 			});
+			return false;
 		});
 }
 

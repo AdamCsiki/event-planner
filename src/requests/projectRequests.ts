@@ -1,6 +1,8 @@
+import { ProjectModel } from "./../interfaces/ProjectModel";
 import { basePath } from "../api/api";
 import { fetchPlus } from "../api/fetchPlus";
 import { BoardModel } from "../interfaces/BoardModel";
+import { TaskModel } from "../interfaces/TaskModel";
 
 export const getProjectsRequest = () => {
 	let url = basePath + "/projects";
@@ -25,6 +27,12 @@ export const getProjectsRequest = () => {
 		});
 };
 
+export const editProjectRequest = (project: ProjectModel) => {
+	const url = basePath + `/projects/${project.id}/edit_project`;
+
+	return fetchPlus(url, { method: "PUT", body: JSON.stringify(project) });
+};
+
 /**
  * BOARDS
  */
@@ -44,6 +52,13 @@ export const createBoardRequest = (projectId: string, name: string) => {
 			console.error(err);
 			return {};
 		});
+};
+
+export const editBoardRequest = (projectId: string, board: BoardModel) => {
+	const url =
+		basePath + `/projects/${projectId}/boards/${board.id}/edit_board`;
+
+	return fetchPlus(url, { method: "PUT", body: JSON.stringify(board) });
 };
 
 export const deleteBoardRequest = (projectId: string, boardId: string) => {
@@ -74,6 +89,30 @@ export const createTaskRequest = (
 			console.error(err);
 			return {};
 		});
+};
+
+export const editTaskRequest = (
+	projectId: string,
+	boardId: string,
+	task: TaskModel
+) => {
+	const url =
+		basePath +
+		`/projects/${projectId}/boards/${boardId}/tasks/${task.id}/edit_task`;
+	console.log(task);
+	return fetchPlus(url, { method: "PUT", body: JSON.stringify({ ...task }) });
+};
+
+export const openTaskRequest = (
+	projectId: string,
+	boardId: string,
+	taskId: string
+) => {
+	const url =
+		basePath +
+		`/projects/${projectId}/boards/${boardId}/tasks/${taskId}/open`;
+
+	return fetchPlus(url, { method: "PUT" });
 };
 
 export const deleteTaskRequest = (
