@@ -23,25 +23,8 @@ export default function Home() {
 				</video>
 			</div>
 			<div className="home-top">
-				<Typography
-					variant="h2"
-					sx={{
-						fontWeight: 700,
-						// textShadow:
-						// 	"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
-					}}
-				>
-					Plan ahead
-				</Typography>
-				<Typography
-					variant="h4"
-					sx={
-						{
-							// textShadow:
-							// 	"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
-						}
-					}
-				>
+				<Typography variant="h2">Plan ahead</Typography>
+				<Typography variant="h4">
 					and never worry about tomorrow
 				</Typography>
 			</div>
