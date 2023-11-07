@@ -22,7 +22,6 @@ export default function RegisterPage() {
 	const navigate = useNavigate();
 
 	const submit = () => {
-		console.log(registerForm);
 		if (registerForm.email !== registerForm.confirmEmail) {
 			setErrorMsg("Email does not match.");
 			return;
@@ -33,7 +32,7 @@ export default function RegisterPage() {
 			return;
 		}
 
-		register(registerForm);
+		register(registerForm.email, registerForm.password);
 	};
 
 	useEffect(() => {
@@ -58,16 +57,6 @@ export default function RegisterPage() {
 						Register
 					</Typography>
 				</div>
-				<TextField
-					required
-					label="Name"
-					onChange={(e) =>
-						setRegisterForm((form) => {
-							form.name = e.target.value;
-							return { ...form };
-						})
-					}
-				/>
 				<TextField
 					required
 					label="Email"

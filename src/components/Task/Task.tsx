@@ -22,7 +22,6 @@ import { useParams } from "react-router-dom";
 import {
 	deleteTaskRequest,
 	editTaskRequest,
-	openTaskRequest,
 } from "../../requests/projectRequests";
 import { ConfirmContext } from "../../context/ConfirmContext";
 import { EditableText } from "../EditableText/EditableText";
@@ -30,31 +29,22 @@ import { EditableText } from "../EditableText/EditableText";
 interface ExtendedProps extends HtmlHTMLAttributes<HTMLDivElement> {
 	boardId: string;
 	task: TaskModel;
-	refreshProject: () => void;
 }
 
 export default function Task(props: ExtendedProps) {
 	const { projectId } = useParams();
 	const { setOpen, setAcceptFunction } = useContext(ConfirmContext);
 
-	const { task, boardId, refreshProject } = props;
+	const { task, boardId } = props;
 
-	const removeTask = (taskId: string) => {
-		deleteTaskRequest(projectId!, boardId, taskId).then(() => {
-			refreshProject();
-		});
+	const [taskOpen, setTaskOpen] = useState(false);
+
+	const removeTask = () => {
+		deleteTaskRequest(projectId!, boardId, task.id);
 	};
 
-	const openTask = (taskId: string) => {
-		openTaskRequest(projectId!, boardId, taskId).then(() => {
-			refreshProject();
-		});
-	};
-
-	const editTask = (task: TaskModel) => {
-		editTaskRequest(projectId!, boardId, task).then(() => {
-			refreshProject();
-		});
+	const editTask = (taskEdit: any) => {
+		editTaskRequest(projectId!, boardId, task.id, taskEdit);
 	};
 
 	return (
@@ -84,16 +74,16 @@ export default function Task(props: ExtendedProps) {
 			<div className="task-header">
 				<EditableText
 					onFinish={(value) => {
-						editTask({ ...task, name: value });
+						editTask({ title: value });
 					}}
 				>
-					{task.name}
+					{task.title}
 				</EditableText>
 				<IconButton
 					className="Button-x"
 					onClick={() => {
 						setAcceptFunction(() => {
-							removeTask(task.id);
+							removeTask();
 						});
 						setOpen(true);
 					}}
@@ -102,7 +92,7 @@ export default function Task(props: ExtendedProps) {
 				</IconButton>
 			</div>
 
-			{task.open && (
+			{taskOpen && (
 				<Box
 					sx={{
 						minHeight: "fit-content",
@@ -118,13 +108,15 @@ export default function Task(props: ExtendedProps) {
 					<EditableText
 						textFieldVariant="outlined"
 						onFinish={(value) => {
-							editTask({ ...task, details: value });
+							editTask({ details: value });
 						}}
 						sx={{
 							minWidth: "100%",
 						}}
 					>
-						{task.details.length == 0 ? "Details" : task.details}
+						{task.details && task.details.length == 0
+							? "Details"
+							: task.details}
 					</EditableText>
 				</Box>
 			)}
@@ -132,12 +124,14 @@ export default function Task(props: ExtendedProps) {
 			<Button
 				size="small"
 				sx={{ padding: "0.5rem" }}
-				color={task.open ? "error" : "info"}
+				color={taskOpen ? "error" : "info"}
 				onClick={() => {
-					openTask(task.id);
+					setTaskOpen((prev) => {
+						return !prev;
+					});
 				}}
 			>
-				{task.open ? "CLOSE" : "OPEN"}
+				{taskOpen ? "CLOSE" : "OPEN"}
 			</Button>
 		</Box>
 	);

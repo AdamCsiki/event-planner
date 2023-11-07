@@ -1,34 +1,27 @@
 import "./Projects.style.css";
 import { useContext, useEffect, useState, Fragment } from "react";
 import { ProjectModel } from "../../interfaces/ProjectModel";
-import ProjectListItem from "../../components/ProjectListItem/ProjectListItem";
-import { basePath } from "../../api/api";
 import CreateProjectModal from "../../modals/CreateProjectModal/CreateProjectModal";
-import { Typography } from "@mui/material";
 import TextField from "../../components/TextField/TextField";
-import Button from "../../components/Button/Button";
 import ProjectTable from "../../components/ProjectTable/ProjectTable";
-import ProjectPreviewModel from "../../interfaces/ProjectPreviewModel";
-import { fetchPlus } from "../../api/fetchPlus";
-import AreYouSureModal from "../../modals/AreYouSureModal/AreYouSureModal";
 import IconButton from "../../components/IconButton/IconButton";
 import { Create, PlusOne, Refresh, Search } from "@mui/icons-material";
 import { getProjectsRequest } from "../../requests/projectRequests";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 export default function Projects() {
-	const [projects, setProjects] = useState<ProjectPreviewModel[]>([]);
+	const [projects, setProjects] = useState<ProjectModel[]>([]);
 	const [searchQuery, setSearchQuery] = useState<string | null>(null);
 	const [visible, setVisible] = useState(false);
-
-	const [loading, setLoading] = useState<boolean>(true);
 
 	const searchProjects = () => {
 		if (searchQuery) {
 			return projects.filter((project) => {
-				return project.name.includes(searchQuery);
+				return project.title.includes(searchQuery);
 			});
 		}
-		return;
+		return [];
 	};
 
 	const getProjects = () => {
@@ -38,7 +31,21 @@ export default function Projects() {
 	};
 
 	useEffect(() => {
-		getProjects();
+		const projectsQuery = query(collection(db, "projects"));
+
+		const unsub = onSnapshot(projectsQuery, (snapshot) => {
+			console.log("Project snapshot");
+			const snapProjects: ProjectModel[] = [];
+			snapshot.docs.forEach((snap) => {
+				snapProjects.push({
+					...snap.data(),
+					id: snap.id,
+				} as ProjectModel);
+			});
+			setProjects(snapProjects);
+		});
+
+		return () => unsub();
 	}, []);
 
 	return (

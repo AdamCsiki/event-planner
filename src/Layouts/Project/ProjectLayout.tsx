@@ -1,8 +1,16 @@
 import "./Project.style.css";
 import { Box, Typography } from "@mui/material";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import {
+	Outlet,
+	useNavigate,
+	useOutletContext,
+	useParams,
+} from "react-router-dom";
 import Link from "../../components/Link/Link";
-import { getDaysUntilDate } from "../../services/DateService";
+import {
+	getDateFromSeconds,
+	getDaysUntilDate,
+} from "../../services/DateService";
 import { red } from "@mui/material/colors";
 import { ProjectModel } from "../../interfaces/ProjectModel";
 import { useEffect, useState } from "react";
@@ -10,8 +18,23 @@ import { fetchPlus } from "../../api/fetchPlus";
 import { basePath } from "../../api/api";
 import IconButton from "../../components/IconButton/IconButton";
 import { ArrowBack } from "@mui/icons-material";
-import { editProjectRequest } from "../../requests/projectRequests";
+import {
+	editProjectRequest,
+	getProjectRequest,
+} from "../../requests/projectRequests";
 import { EditableText } from "../../components/EditableText/EditableText";
+
+export interface ProjectContext {
+	userProject: ProjectModel;
+	setUserProject: React.Dispatch<
+		React.SetStateAction<ProjectModel | undefined>
+	>;
+	getProject: () => void;
+}
+
+export function useProject() {
+	return useOutletContext<ProjectContext>();
+}
 
 export function ProjectLayout() {
 	const { projectId } = useParams();
@@ -20,33 +43,24 @@ export function ProjectLayout() {
 	const [userProject, setUserProject] = useState<ProjectModel>();
 
 	const getProject = () => {
-		const url = basePath + `/projects/${projectId}`;
-
-		return fetchPlus(url, { method: "GET" })
-			.then((res) => {
-				return res.json();
-			})
-			.then((data) => {
-				setUserProject(data);
-			})
-			.catch(() => {
-				navigate("/projects");
-			});
+		getProjectRequest(projectId!).then((data) => {
+			setUserProject(data);
+		});
 	};
 
-	const editProject = (project: ProjectModel) => {
-		editProjectRequest(project).then(() => {
-			getProject();
-		});
+	const editProject = (project: any) => {
+		editProjectRequest(projectId!, project);
 	};
 
 	useEffect(() => {
-		getProject().catch((err) => {
-			navigate("/projects");
-		});
+		getProject();
 	}, []);
 
-	return userProject ? (
+	if (!userProject) {
+		return <div></div>;
+	}
+
+	return (
 		<div className="Project">
 			<header className="project-header">
 				<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -67,10 +81,13 @@ export function ProjectLayout() {
 							},
 						}}
 						onFinish={(value) => {
-							editProject({ ...userProject, name: value });
+							if (!userProject) {
+								return;
+							}
+							editProject({ title: value });
 						}}
 					>
-						{userProject.name}
+						{userProject!.title ?? ""}
 					</EditableText>
 				</Box>
 				<Box sx={{ display: "flex", gap: 1 }}>
@@ -91,21 +108,19 @@ export function ProjectLayout() {
 					sx={{ display: { xs: "none", sm: "flex" } }}
 					component={"span"}
 				>
-					Deadline in{" "}
+					Deadline on{" "}
 					<Typography
 						color={red[500]}
 						sx={{ mr: 0.5, ml: 0.5 }}
 					>
-						{getDaysUntilDate(userProject!.deadLine!)}
+						{userProject &&
+							getDateFromSeconds(
+								userProject.deadline.seconds
+							).toDateString()}
 					</Typography>
-					days
 				</Typography>
 			</header>
-			<Outlet />
-		</div>
-	) : (
-		<div>
-			<Outlet />
+			<Outlet context={{ userProject, setUserProject, getProject }} />
 		</div>
 	);
 }

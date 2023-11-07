@@ -2,7 +2,7 @@ import "./Board.style.css";
 import { TaskModel } from "../../interfaces/TaskModel";
 import Task from "../Task/Task";
 import Button from "../Button/Button";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
 	Divider,
 	IconButton,
@@ -17,44 +17,63 @@ import {
 	createTaskRequest,
 	deleteBoardRequest,
 	editBoardRequest,
+	tasksCollectionRef,
 } from "../../requests/projectRequests";
 import { useParams } from "react-router-dom";
 import { ConfirmContext } from "../../context/ConfirmContext";
 import { BoardModel } from "../../interfaces/BoardModel";
 import { EditableText } from "../EditableText/EditableText";
+import { getDocs, onSnapshot, query } from "firebase/firestore";
 
 interface ExtendedProps {
 	board: BoardModel;
-	refreshProject: () => void;
 }
 
 export default function Board(props: ExtendedProps) {
 	const { projectId } = useParams();
-	const { board, refreshProject } = props;
+	const { board } = props;
 
 	const { setOpen, setAcceptFunction } = useContext(ConfirmContext);
 
-	const [newTaskName, setNewTaskName] = useState<string | null>();
+	const [tasks, setTasks] = useState<TaskModel[]>([]);
+	const [newTaskName, setNewTaskName] = useState<string>("");
 
-	const removeBoard = (boardId: string) => {
-		deleteBoardRequest(projectId!, boardId).finally(() => {
-			refreshProject();
-			setNewTaskName("");
-		});
+	const getTasks = () => {
+		// TODO
 	};
 
-	const editBoard = (board: BoardModel) => {
-		editBoardRequest(projectId!, board).finally(() => {
-			refreshProject();
-		});
+	const removeBoard = (boardId: string) => {
+		deleteBoardRequest(projectId!, boardId);
+	};
+
+	const editBoard = (boardEdit: BoardModel) => {
+		editBoardRequest(projectId!, board.id, boardEdit);
 	};
 
 	const addTask = (boardId: string, taskName: string) => {
-		createTaskRequest(projectId!, boardId, taskName).finally(() => {
-			refreshProject();
-			setNewTaskName("");
-		});
+		createTaskRequest(projectId!, boardId, taskName);
 	};
+
+	useEffect(() => {
+		const q = query(tasksCollectionRef(projectId!, board.id));
+
+		const unsub = onSnapshot(q, (snapshot) => {
+			const updatedTasks = snapshot.docs.map((snap) => {
+				const data = snap.data();
+
+				return {
+					id: snap.id,
+					title: data.title,
+					details: data.details,
+					progress: data.progress,
+					open: data.open,
+				} as TaskModel;
+			});
+			setTasks(updatedTasks);
+		});
+
+		return () => unsub();
+	}, []);
 
 	return (
 		<div className="Board">
@@ -69,10 +88,10 @@ export default function Board(props: ExtendedProps) {
 			>
 				<EditableText
 					onFinish={(value) => {
-						editBoard({ ...board, name: value });
+						editBoard({ title: value } as BoardModel);
 					}}
 				>
-					{board.name}
+					{board.title}
 				</EditableText>
 				<IconButton
 					onClick={() => {
@@ -94,13 +113,12 @@ export default function Board(props: ExtendedProps) {
 					padding: "0 1rem",
 				}}
 			>
-				{board.tasks.map((task, index) => {
+				{tasks.map((task, index) => {
 					return (
 						<Task
 							key={task.id}
 							task={task}
 							boardId={board.id}
-							refreshProject={refreshProject}
 						/>
 					);
 				})}

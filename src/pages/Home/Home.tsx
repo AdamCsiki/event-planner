@@ -1,17 +1,8 @@
 import "./Home.style.css";
 import poster from "../../img/Shotcut_00_00_00_000.png";
 import { Typography } from "@mui/material";
-import { basePath } from "../../api/api";
 
 export default function Home() {
-	// try {
-	// 	import("../../video/pufi_background2.mp4").then((video_) => {
-	// 		video = video_;
-	// 	});
-	// } catch (e) {
-	// 	console.error(e);
-	// }
-
 	return (
 		<div className="Home">
 			<div className="video-wrapper">
@@ -24,31 +15,16 @@ export default function Home() {
 					playsInline={true}
 				>
 					<source
-						src={basePath + "/static/video/pufi_background2.mp4"}
+						src={
+							"https://firebasestorage.googleapis.com/v0/b/project-planner-38230.appspot.com/o/pufi_background.mp4?alt=media&token=54880849-b52a-4c16-806f-cde044bdc9b1"
+						}
 						type="video/mp4"
 					/>
 				</video>
 			</div>
 			<div className="home-top">
-				<Typography
-					variant="h2"
-					sx={{
-						fontWeight: 700,
-						// textShadow:
-						// 	"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
-					}}
-				>
-					Plan ahead
-				</Typography>
-				<Typography
-					variant="h4"
-					sx={
-						{
-							// textShadow:
-							// 	"-1px -1px 0 var(--black), 1px -1px 0 var(--black), -1px 1px 0 var(--black), 1px 1px 0 var(--black)",
-						}
-					}
-				>
+				<Typography variant="h2">Plan ahead</Typography>
+				<Typography variant="h4">
 					and never worry about tomorrow
 				</Typography>
 			</div>

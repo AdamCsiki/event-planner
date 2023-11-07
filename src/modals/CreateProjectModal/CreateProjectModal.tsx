@@ -8,6 +8,8 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { basePath } from "../../api/api";
 import { fetchPlus } from "../../api/fetchPlus";
 import dayjs from "dayjs";
+import { createProjectRequest } from "../../requests/projectRequests";
+import { Timestamp } from "firebase/firestore";
 
 interface ExtendedProps {
 	visible: boolean;
@@ -19,31 +21,12 @@ export default function CreateProjectModal(props: ExtendedProps) {
 	const { visible, onCancel, onFinish } = props;
 
 	const [form, setForm] = useState<ProjectFormModel>({
-		startDate: dayjs(new Date()).format("DD/MM/YYYY"),
+		start_date: new Date(),
+		progress: 0,
 	} as ProjectFormModel);
 
 	const putProject = () => {
-		const url = basePath + "/projects/add";
-
-		return fetchPlus(url, {
-			method: "PUT",
-			body: JSON.stringify(form),
-		})
-			.then((res) => {
-				if (res.ok) {
-					return res.json();
-				}
-				throw new Error("FetchPlus failed.");
-			})
-			.then((data) => {
-				return data;
-			})
-			.catch((err) => {
-				console.error(err);
-			})
-			.then((res) => {
-				return res;
-			});
+		return createProjectRequest(form);
 	};
 
 	useEffect(() => {
@@ -62,7 +45,7 @@ export default function CreateProjectModal(props: ExtendedProps) {
 						label={"Title"}
 						onChange={(e) => {
 							setForm((old_form) => {
-								old_form.name = e.target.value;
+								old_form.title = e.target.value;
 								return { ...old_form };
 							});
 						}}
@@ -85,8 +68,7 @@ export default function CreateProjectModal(props: ExtendedProps) {
 							onChange={(value: string | null) => {
 								setForm((old_form) => {
 									if (value) {
-										old_form.startDate =
-											dayjs(value).format("DD/MM/YYYY");
+										old_form.start_date = new Date(value);
 									}
 
 									return { ...old_form };
@@ -99,9 +81,7 @@ export default function CreateProjectModal(props: ExtendedProps) {
 							onChange={(value: string | null) => {
 								setForm((old_form) => {
 									if (value) {
-										old_form.deadLine = new Date(
-											value
-										).toLocaleDateString();
+										old_form.deadline = new Date(value);
 									}
 
 									return { ...old_form };

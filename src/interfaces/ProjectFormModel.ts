@@ -1,6 +1,10 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface ProjectFormModel {
-	name: string;
+	title: string;
 	details: string;
-	startDate: string;
-	deadLine: string;
+	start_date: Date;
+	deadline: Date;
+	created_at: Date;
+	progress: number;
 }
