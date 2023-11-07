@@ -29,10 +29,6 @@ export default function CreateProjectModal(props: ExtendedProps) {
 		return createProjectRequest(form);
 	};
 
-	useEffect(() => {
-		console.log(form);
-	}, [form]);
-
 	return (
 		<Modal
 			open={visible}

@@ -12,6 +12,7 @@ import {
 } from "../../requests/projectRequests";
 import { useProject } from "../../Layouts/Project/ProjectLayout";
 import { onSnapshot, query } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 export default function BoardPage() {
 	const { projectId } = useParams();
@@ -26,8 +27,8 @@ export default function BoardPage() {
 	};
 
 	useEffect(() => {
-		const q = query(boardsCollectionRef(projectId!));
-		const unsub = onSnapshot(q, (snapshot) => {
+		const boardsQuery = query(boardsCollectionRef(projectId!));
+		const unsub = onSnapshot(boardsQuery, (snapshot) => {
 			const snapBoards: BoardModel[] = snapshot.docs.map((snap) => {
 				return {
 					id: snap.id,

@@ -6,9 +6,13 @@ import TextField from "../../components/TextField/TextField";
 import ProjectTable from "../../components/ProjectTable/ProjectTable";
 import IconButton from "../../components/IconButton/IconButton";
 import { Create, PlusOne, Refresh, Search } from "@mui/icons-material";
-import { getProjectsRequest } from "../../requests/projectRequests";
+import {
+	getProjectsRequest,
+	projectsCollectionRef,
+} from "../../requests/projectRequests";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import { getAuth } from "firebase/auth";
 
 export default function Projects() {
 	const [projects, setProjects] = useState<ProjectModel[]>([]);
@@ -31,7 +35,7 @@ export default function Projects() {
 	};
 
 	useEffect(() => {
-		const projectsQuery = query(collection(db, "projects"));
+		const projectsQuery = query(projectsCollectionRef());
 
 		const unsub = onSnapshot(projectsQuery, (snapshot) => {
 			console.log("Project snapshot");

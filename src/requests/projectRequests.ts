@@ -6,8 +6,6 @@ import {
 	getDocs,
 	getDocsFromCache,
 	collection,
-	getDoc,
-	getDocFromCache,
 	doc,
 	addDoc,
 	query,
@@ -17,24 +15,37 @@ import {
 	deleteDoc,
 } from "firebase/firestore";
 import { ProjectFormModel } from "../interfaces/ProjectFormModel";
+import { getAuth } from "firebase/auth";
 
-export const projectsCollectionRef = collection(db, "projects");
-export const boardsCollectionRef = (projectId: string) =>
-	collection(db, `projects/${projectId}/boards`);
-export const tasksCollectionRef = (projectId: string, boardId: string) =>
-	collection(db, `projects/${projectId}/boards/${boardId}/tasks`);
+export const projectsCollectionRef = () => {
+	const user = getAuth().currentUser?.uid;
 
-export const getProjectsRequest = async (useCache = true) => {
+	return collection(db, `users/${user}/projects`);
+};
+export const boardsCollectionRef = (projectId: string) => {
+	const user = getAuth().currentUser?.uid;
+
+	return collection(db, `users/${user}/projects/${projectId}/boards`);
+};
+
+export const tasksCollectionRef = (projectId: string, boardId: string) => {
+	const user = getAuth().currentUser?.uid;
+
+	return collection(
+		db,
+		`users/${user}/projects/${projectId}/boards/${boardId}/tasks`
+	);
+};
+
+export const getProjectsRequest = async () => {
 	try {
-		const data = useCache
-			? await getDocsFromCache(projectsCollectionRef)
-			: await getDocs(projectsCollectionRef);
+		const data = await getDocs(projectsCollectionRef());
 
 		const filtered = data.docs.map((doc) => ({
 			...doc.data(),
 			id: doc.id,
 		}));
-		console.log(filtered);
+
 		return filtered as ProjectModel[];
 	} catch (err) {
 		return [] as ProjectModel[];
@@ -43,7 +54,7 @@ export const getProjectsRequest = async (useCache = true) => {
 
 export const getProjectRequest = async (projectId: string) => {
 	const q = query(
-		projectsCollectionRef,
+		projectsCollectionRef(),
 		where(documentId(), "==", projectId)
 	);
 
@@ -62,7 +73,7 @@ export const getProjectRequest = async (projectId: string) => {
 };
 
 export const createProjectRequest = async (project: ProjectFormModel) => {
-	return addDoc(projectsCollectionRef, project);
+	return addDoc(projectsCollectionRef(), project);
 };
 
 export const editProjectRequest = async (projectId: string, project: any) => {
@@ -79,7 +90,12 @@ export const editProjectRequest = async (projectId: string, project: any) => {
 
 export const deleteProjectRequest = async (projectId: string) => {
 	const projectRef = doc(db, `projects`, projectId);
-	deleteDoc(projectRef);
+
+	try {
+		await deleteDoc(projectRef);
+	} catch (error) {
+		console.error("Error updating project: ", error);
+	}
 };
 
 /**
