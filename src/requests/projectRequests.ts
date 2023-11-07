@@ -1,6 +1,5 @@
 import { ProjectModel } from "./../interfaces/ProjectModel";
 import { BoardModel } from "../interfaces/BoardModel";
-import { TaskModel } from "../interfaces/TaskModel";
 import { db } from "../config/firebase";
 import {
 	getDocs,
@@ -77,7 +76,8 @@ export const createProjectRequest = async (project: ProjectFormModel) => {
 };
 
 export const editProjectRequest = async (projectId: string, project: any) => {
-	const projectRef = doc(db, `projects`, projectId);
+	const user = getAuth().currentUser?.uid;
+	const projectRef = doc(db, `users/${user}/projects`, projectId);
 	const noIdProject: any = { ...project };
 	delete noIdProject.id;
 
@@ -89,7 +89,8 @@ export const editProjectRequest = async (projectId: string, project: any) => {
 };
 
 export const deleteProjectRequest = async (projectId: string) => {
-	const projectRef = doc(db, `projects`, projectId);
+	const user = getAuth().currentUser?.uid;
+	const projectRef = doc(db, `users/${user}/projects`, projectId);
 
 	try {
 		await deleteDoc(projectRef);
@@ -108,7 +109,7 @@ export const getBoardsRequest = async (projectId: string) => {
 			...doc.data(),
 			id: doc.id,
 		}));
-		console.log(filtered);
+
 		return filtered as BoardModel[];
 	} catch (err) {
 		return [];
@@ -130,7 +131,12 @@ export const editBoardRequest = async (
 	boardId: string,
 	board: BoardModel
 ) => {
-	const boardRef = doc(db, `projects/${projectId}/boards`, boardId);
+	const user = getAuth().currentUser?.uid;
+	const boardRef = doc(
+		db,
+		`users/${user}/projects/${projectId}/boards`,
+		boardId
+	);
 	const noIdBoard: any = { ...board };
 	delete noIdBoard.id;
 
@@ -142,7 +148,12 @@ export const editBoardRequest = async (
 };
 
 export const deleteBoardRequest = (projectId: string, boardId: string) => {
-	const boardRef = doc(db, `projects/${projectId}/boards`, boardId);
+	const user = getAuth().currentUser?.uid;
+	const boardRef = doc(
+		db,
+		`users/${user}/projects/${projectId}/boards`,
+		boardId
+	);
 
 	try {
 		deleteDoc(boardRef);
@@ -175,13 +186,13 @@ export const editTaskRequest = async (
 	taskId: string,
 	task: any
 ) => {
+	const user = getAuth().currentUser?.uid;
 	const taskRef = doc(
 		db,
-		`projects/${projectId}/boards/${boardId}/tasks`,
+		`users/${user}/projects/${projectId}/boards/${boardId}/tasks`,
 		taskId
 	);
 	const noIdTask: any = { ...task };
-	console.log(noIdTask);
 	delete noIdTask.id;
 
 	try {
@@ -196,9 +207,10 @@ export const deleteTaskRequest = (
 	boardId: string,
 	taskId: string
 ) => {
+	const user = getAuth().currentUser?.uid;
 	const taskRef = doc(
 		db,
-		`projects/${projectId}/boards/${boardId}/tasks`,
+		`users/${user}/projects/${projectId}/boards/${boardId}/tasks`,
 		taskId
 	);
 
