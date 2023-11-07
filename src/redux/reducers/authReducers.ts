@@ -8,13 +8,11 @@ import {
 	SET_TOKENS,
 	LOGOUT,
 } from "../types/States";
+import { User } from "firebase/auth";
 
 const initialState: AuthState = {
 	isLoggedIn: true,
-	id: null,
-	name: null,
-	email: null,
-	token: null,
+	user: null,
 };
 
 export default function authReducer(
@@ -28,40 +26,16 @@ export default function authReducer(
 			return {
 				...state,
 				isLoggedIn: true,
-				token: payload.token,
+				user: payload.user,
 			};
 		case LOGIN_FAIL:
 			return {
 				...state,
 				isLoggedIn: false,
-				token: null,
-				id: null,
-				name: null,
-				email: null,
+				user: null,
 			};
-		case SET_USER:
-			return {
-				...state,
-				id: payload.id,
-				email: payload.email,
-				name: payload.name,
-			};
-		case REFRESH_SUCCESS:
-			return {
-				...state,
-				isLoggedIn: true,
-				token: payload.token,
-			};
-		case REFRESH_FAIL:
-			return {
-				...state,
-				isLoggedIn: false,
-				token: null,
-			};
-		case SET_TOKENS:
-			return { ...state, isLoggedIn: true, token: payload.token };
 		case LOGOUT:
-			return { ...state, ...initialState, isLoggedIn: false };
+			return { ...state, ...initialState, isLoggedIn: false, user: null };
 		default: {
 			return { ...state };
 		}

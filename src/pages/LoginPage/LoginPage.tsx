@@ -3,13 +3,19 @@ import { useState } from "react";
 import Button from "../../components/Button/Button";
 import { LoginFormModel } from "../../interfaces/LoginFormModel";
 import { useDispatch, useSelector } from "react-redux";
-import { login, refreshTokens } from "../../requests/authRequests";
+import { login, loginWithGoogle } from "../../requests/authRequests";
 import { useNavigate } from "react-router-dom";
-import { FormControl, TextField, Typography } from "@mui/material";
-import { LOGIN_FAIL, LOGIN_SUCCESS } from "../../redux/types/States";
+import {
+	Box,
+	Divider,
+	FormControl,
+	TextField,
+	Typography,
+} from "@mui/material";
 import { RootState } from "../../redux/store";
 import { useEffect } from "react";
 import Link from "../../components/Link/Link";
+import { Google } from "@mui/icons-material";
 
 export default function LoginPage() {
 	const auth = useSelector((state: RootState) => state.auth);
@@ -23,10 +29,8 @@ export default function LoginPage() {
 	);
 
 	const submit = () => {
-		return login(loginForm).then((isLoggedIn) => {
-			if (isLoggedIn) {
-				navigate("/projects");
-			}
+		return login(loginForm.email, loginForm.password).catch((err) => {
+			setErrorMsg(err);
 		});
 	};
 
@@ -38,6 +42,12 @@ export default function LoginPage() {
 
 	return (
 		<div className="LoginPage">
+			<Box
+				sx={{
+					p: 1,
+					position: "absolute",
+				}}
+			></Box>
 			<FormControl
 				className="login-form"
 				onSubmit={(e) => {
@@ -71,7 +81,14 @@ export default function LoginPage() {
 					}}
 				/>
 				<Link to={"/register"}>Make an account?</Link>
-				<div className="login-form-button-container">
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						gap: 1,
+					}}
+				>
 					<Button
 						size="large"
 						onClick={() => {
@@ -80,7 +97,20 @@ export default function LoginPage() {
 					>
 						Login
 					</Button>
-				</div>
+					<Divider />
+					<Button
+						size="large"
+						sx={{
+							gap: 1,
+						}}
+						onClick={() => {
+							loginWithGoogle();
+						}}
+					>
+						<Google />
+						Login with Google
+					</Button>
+				</Box>
 				<Typography
 					color="error"
 					sx={{ fontWeight: 500 }}

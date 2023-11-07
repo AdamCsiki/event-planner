@@ -1,82 +1,68 @@
 import "./BoardPage.style.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { basePath } from "../../api/api";
-import Link from "../../components/Link/Link";
 import Button from "../../components/Button/Button";
-import { TaskModel } from "../../interfaces/TaskModel";
 import Board from "../../components/Board/Board";
 import { BoardModel } from "../../interfaces/BoardModel";
 import { Box, TextField, Typography } from "@mui/material";
-import { ProjectModel } from "../../interfaces/ProjectModel";
-import { fetchPlus } from "../../api/fetchPlus";
-import { getDaysUntilDate } from "../../services/DateService";
-import { red } from "@mui/material/colors";
 import {
+	boardsCollectionRef,
 	createBoardRequest,
-	createTaskRequest,
-	editProjectRequest,
+	getBoardsRequest,
 } from "../../requests/projectRequests";
-import LoadingPage from "../LoadingPage/LoadingPage";
+import { useProject } from "../../Layouts/Project/ProjectLayout";
+import { onSnapshot, query } from "firebase/firestore";
 
 export default function BoardPage() {
 	const { projectId } = useParams();
-	const location = useLocation();
+	const { userProject, setUserProject, getProject } = useProject();
 
-	const navigate = useNavigate();
+	const [projectBoards, setProjectBoards] = useState<BoardModel[]>();
 
-	const [userProject, setUserProject] = useState<Partial<ProjectModel>>();
 	const [newBoardName, setNewBoardName] = useState("");
 
-	const getProject = () => {
-		const url = basePath + `/projects/${projectId}`;
-
-		return fetchPlus(url, { method: "GET" })
-			.then((res) => {
-				return res.json();
-			})
-			.then((data) => {
-				console.log("GET PROJECT");
-				setUserProject(data);
-			});
-	};
-
-	const editProject = (project: ProjectModel) => {
-		editProjectRequest(project).then(() => {
-			getProject();
-		});
-	};
-
 	const createBoard = (name: string) => {
-		if (name === null || name === undefined || name.length === 0) {
-			return;
-		}
-
-		createBoardRequest(projectId!, name).then(() => {
-			getProject();
-			setNewBoardName("");
-		});
+		createBoardRequest(projectId!, name);
 	};
 
 	useEffect(() => {
-		getProject().catch((err) => {
-			navigate("/projects");
+		const q = query(boardsCollectionRef(projectId!));
+		const unsub = onSnapshot(q, (snapshot) => {
+			const snapBoards: BoardModel[] = snapshot.docs.map((snap) => {
+				return {
+					id: snap.id,
+					...snap.data(),
+				} as BoardModel;
+			});
+			setProjectBoards(snapBoards);
 		});
+
+		return () => unsub();
 	}, []);
 
-	if (!userProject) {
-		return <LoadingPage />;
-	}
-
 	return (
-		<div className="project-boards">
-			{userProject.boards &&
-				userProject.boards.map((board, index) => {
+		<Box
+			sx={{
+				height: "100%",
+				width: "100%",
+
+				display: "flex",
+				flexDirection: { xs: "column", sm: "row" },
+				justifyContent: "flex-start",
+				alignItems: "flex-start",
+
+				overflowX: "auto",
+
+				padding: 2,
+				gap: 3,
+			}}
+		>
+			{projectBoards &&
+				projectBoards.map((board, index) => {
 					return (
 						<Board
 							key={index}
 							board={board}
-							refreshProject={getProject}
 						/>
 					);
 				})}
@@ -90,11 +76,11 @@ export default function BoardPage() {
 					variant="standard"
 					placeholder="New Board"
 					value={newBoardName}
-					sx={{
-						minWidth: "8rem",
-					}}
 					onChange={(e) => {
 						setNewBoardName(e.target.value);
+					}}
+					sx={{
+						minWidth: "8rem",
 					}}
 				/>
 				<Button
@@ -106,6 +92,6 @@ export default function BoardPage() {
 					Add
 				</Button>
 			</Box>
-		</div>
+		</Box>
 	);
 }

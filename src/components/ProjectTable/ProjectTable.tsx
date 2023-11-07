@@ -20,9 +20,11 @@ import { fetchPlus } from "../../api/fetchPlus";
 import AreYouSureModal from "../../modals/AreYouSureModal/AreYouSureModal";
 import { useContext, useState } from "react";
 import { ConfirmContext } from "../../context/ConfirmContext";
+import { getDateFromSeconds } from "../../services/DateService";
+import { deleteProjectRequest } from "../../requests/projectRequests";
 
 interface ExtendedProps {
-	projects: ProjectPreviewModel[];
+	projects: ProjectModel[];
 	refreshTable: () => void;
 }
 
@@ -32,12 +34,8 @@ export default function ProjectTable(props: ExtendedProps) {
 	const { setAcceptFunction, setOpen, setMessage } =
 		useContext(ConfirmContext);
 
-	const deleteProject = (id: number) => {
-		const url = basePath + "/projects/delete/" + id;
-
-		return fetchPlus(url, { method: "DELETE" }).then(() => {
-			refreshTable();
-		});
+	const deleteProject = (projectId: string) => {
+		deleteProjectRequest(projectId);
 	};
 
 	return (
@@ -71,14 +69,19 @@ export default function ProjectTable(props: ExtendedProps) {
 									<TableCell>
 										<Link to={`/projects/${project.id}`}>
 											<Typography>
-												{project.name}
+												{!project.title &&
+												project.title.length == 0
+													? "No title"
+													: project.title}
 											</Typography>
 										</Link>
 									</TableCell>
 									<TableCell>
-										{new Date(
-											project.deadLine
-										).toLocaleDateString()}
+										{project.deadline
+											? getDateFromSeconds(
+													project.deadline.seconds
+											  ).toDateString()
+											: ""}
 									</TableCell>
 									<TableCell>
 										<Box
@@ -116,11 +119,10 @@ export default function ProjectTable(props: ExtendedProps) {
 											onClick={(e) => {
 												setOpen(true);
 												setMessage(
-													`Are you sure you want to delete ${project.name}?`
+													`Are you sure you want to delete ${project.title}?`
 												);
 												setAcceptFunction(() => {
-													// deleteProject(project.id);
-													console.log("DELETED");
+													deleteProject(project.id);
 												});
 											}}
 										>

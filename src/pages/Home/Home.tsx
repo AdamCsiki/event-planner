@@ -1,17 +1,8 @@
 import "./Home.style.css";
 import poster from "../../img/Shotcut_00_00_00_000.png";
 import { Typography } from "@mui/material";
-import { basePath } from "../../api/api";
 
 export default function Home() {
-	// try {
-	// 	import("../../video/pufi_background2.mp4").then((video_) => {
-	// 		video = video_;
-	// 	});
-	// } catch (e) {
-	// 	console.error(e);
-	// }
-
 	return (
 		<div className="Home">
 			<div className="video-wrapper">
@@ -24,7 +15,9 @@ export default function Home() {
 					playsInline={true}
 				>
 					<source
-						src={basePath + "/static/video/pufi_background2.mp4"}
+						src={
+							"https://firebasestorage.googleapis.com/v0/b/project-planner-38230.appspot.com/o/pufi_background.mp4?alt=media&token=54880849-b52a-4c16-806f-cde044bdc9b1"
+						}
 						type="video/mp4"
 					/>
 				</video>

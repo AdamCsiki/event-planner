@@ -11,3 +11,10 @@ export function getDaysUntilDate(date: string) {
 
 	return daysBetween;
 }
+
+export function getDateFromSeconds(seconds: number) {
+	var t = new Date(1970, 0, 1);
+	t.setSeconds(seconds);
+
+	return t;
+}

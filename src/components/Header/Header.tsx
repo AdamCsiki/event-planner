@@ -1,41 +1,22 @@
 import "./Header.style.css";
 import Navbar from "../Navbar/Navbar";
 import Link from "../Link/Link";
-import { useEffect } from "react";
 import {
 	AppBar,
 	Box,
-	Button,
-	Container,
 	CssBaseline,
 	Drawer,
-	Menu,
-	SwipeableDrawer,
 	Toolbar,
 	Typography,
-	makeStyles,
 } from "@mui/material";
-import {
-	AccountCircle,
-	Dehaze,
-	Logout,
-	Menu as MenuIcon,
-} from "@mui/icons-material";
+import { Logout, Menu as MenuIcon } from "@mui/icons-material";
 import IconButton from "../IconButton/IconButton";
 import { useContext, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { logout, refreshTokens } from "../../requests/authRequests";
-import {
-	fetchPlus,
-	getCookie,
-	removeCookie,
-	setCookie,
-} from "../../api/fetchPlus";
-import { basePath } from "../../api/api";
-import { blue, orange, red } from "@mui/material/colors";
+import { logout } from "../../requests/authRequests";
 import { ConfirmContext } from "../../context/ConfirmContext";
-import { isOnline } from "../../requests/generalRequests";
+import { auth } from "../../config/firebase";
 
 const navItems = ["Home", "Projects"];
 const navLinks = ["/", "/projects"];
@@ -45,10 +26,7 @@ interface ExtendedProps {
 }
 
 export default function Header(props: ExtendedProps) {
-	const auth = useSelector((state: RootState) => state.auth);
-	const dispatch = useDispatch();
-
-	const [online, setOnline] = useState(true);
+	const reduxAuth = useSelector((state: RootState) => state.auth);
 
 	const { setAcceptFunction, setOpen } = useContext(ConfirmContext);
 
@@ -57,12 +35,6 @@ export default function Header(props: ExtendedProps) {
 	const handleDrawerToggle = () => {
 		setNavOpen((prevState) => !prevState);
 	};
-
-	useEffect(() => {
-		isOnline().then((res) => {
-			setOnline(res);
-		});
-	}, []);
 
 	return (
 		<Box sx={{ display: "flex" }}>
@@ -100,25 +72,6 @@ export default function Header(props: ExtendedProps) {
 							</Typography>
 						</Link>
 
-						{!online && (
-							<Box
-								sx={{
-									width: "100%",
-									display: "flex",
-									justifyContent: "center",
-								}}
-							>
-								<Button
-									sx={{ color: "red" }}
-									onClick={() => {
-										window.location.reload();
-									}}
-								>
-									Server offline
-								</Button>
-							</Box>
-						)}
-
 						{/* <Button
 							onClick={() => {
 								fetchPlus(basePath + "/auth/refresh", {
@@ -146,7 +99,7 @@ export default function Header(props: ExtendedProps) {
 								{item}
 							</Link>
 						))}
-						{!auth.isLoggedIn ? (
+						{!reduxAuth.isLoggedIn ? (
 							<Link
 								to={"/login"}
 								sx={{ color: "primary.contrastText" }}
