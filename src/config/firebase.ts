@@ -36,9 +36,9 @@ const firebaseConfig = {
 // Initialize Firebase
 
 const app = initializeApp(firebaseConfig);
-const firestore = initializeFirestore(app, {
-	localCache: memoryLocalCache(),
-});
+// const firestore = initializeFirestore(app, {
+// 	localCache: memoryLocalCache(),
+// });
 
 const analytics = getAnalytics(app);
 

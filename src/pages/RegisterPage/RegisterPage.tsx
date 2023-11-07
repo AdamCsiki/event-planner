@@ -37,7 +37,7 @@ export default function RegisterPage() {
 
 	useEffect(() => {
 		if (auth.isLoggedIn) {
-			navigate(-1);
+			navigate("/projects");
 		}
 	}, []);
 

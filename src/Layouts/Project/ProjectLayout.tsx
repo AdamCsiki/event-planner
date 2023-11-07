@@ -14,8 +14,6 @@ import {
 import { red } from "@mui/material/colors";
 import { ProjectModel } from "../../interfaces/ProjectModel";
 import { useEffect, useState } from "react";
-import { fetchPlus } from "../../api/fetchPlus";
-import { basePath } from "../../api/api";
 import IconButton from "../../components/IconButton/IconButton";
 import { ArrowBack } from "@mui/icons-material";
 import {

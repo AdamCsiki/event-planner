@@ -36,7 +36,7 @@ export default function LoginPage() {
 
 	useEffect(() => {
 		if (auth.isLoggedIn) {
-			navigate(-1);
+			navigate("/projects");
 		}
 	}, [auth.isLoggedIn]);
 
