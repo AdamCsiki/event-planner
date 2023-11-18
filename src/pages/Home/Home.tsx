@@ -23,9 +23,17 @@ export default function Home() {
 				</video>
 			</div>
 			<div className="home-top">
-				<Typography variant="h2">Plan ahead</Typography>
-				<Typography variant="h4">
-					and never worry about tomorrow
+				<Typography variant="h1">Welcome to EPlanner</Typography>
+				<Typography variant="h6">
+					I didn't know what to add as background
+				</Typography>
+				<Typography
+					sx={{
+						top: "-20px",
+						position: "relative",
+					}}
+				>
+					So here is my cat Pufi
 				</Typography>
 			</div>
 		</div>

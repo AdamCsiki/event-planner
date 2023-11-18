@@ -11,32 +11,24 @@ import {
 	CircularProgress,
 	Box,
 } from "@mui/material";
-import { ProjectModel } from "../../interfaces/ProjectModel";
 import { Close, Delete, Details, Info } from "@mui/icons-material";
 import Link from "../Link/Link";
-import ProjectPreviewModel from "../../interfaces/ProjectPreviewModel";
-import { basePath } from "../../api/api";
-import { fetchPlus } from "../../api/fetchPlus";
-import AreYouSureModal from "../../modals/AreYouSureModal/AreYouSureModal";
 import { useContext, useState } from "react";
 import { ConfirmContext } from "../../context/ConfirmContext";
 import { getDateFromSeconds } from "../../services/DateService";
 import { deleteProjectRequest } from "../../requests/projectRequests";
+import { ProjectContext } from "../../context/ProjectContext";
+import { ProjectModel } from "../../interfaces/ProjectModel";
 
 interface ExtendedProps {
 	projects: ProjectModel[];
-	refreshTable: () => void;
 }
 
 export default function ProjectTable(props: ExtendedProps) {
-	const { projects, refreshTable } = props;
+	const { projects } = props;
 
 	const { setAcceptFunction, setOpen, setMessage } =
 		useContext(ConfirmContext);
-
-	const deleteProject = (projectId: string) => {
-		deleteProjectRequest(projectId);
-	};
 
 	return (
 		<TableContainer
@@ -48,16 +40,13 @@ export default function ProjectTable(props: ExtendedProps) {
 				<TableHead>
 					<TableRow>
 						<TableCell>
-							<Typography>Title</Typography>
+							<Typography variant="h6">Title</Typography>
 						</TableCell>
 						<TableCell>
-							<Typography>Deadline</Typography>
+							<Typography variant="h6">Deadline</Typography>
 						</TableCell>
 						<TableCell>
-							<Typography>Progress</Typography>
-						</TableCell>
-						<TableCell>
-							<Typography>Options</Typography>
+							<Typography variant="h6">Progress</Typography>
 						</TableCell>
 					</TableRow>
 				</TableHead>
@@ -67,13 +56,20 @@ export default function ProjectTable(props: ExtendedProps) {
 							return (
 								<TableRow key={index}>
 									<TableCell>
-										<Link to={`/projects/${project.id}`}>
-											<Typography>
-												{!project.title &&
-												project.title.length == 0
-													? "No title"
-													: project.title}
-											</Typography>
+										<Link
+											to={`/projects/${project.id}`}
+											variant="h6"
+											sx={{
+												color: "primary.light",
+												":hover": {
+													color: "primary.dark",
+												},
+											}}
+										>
+											{!project.title &&
+											project.title.length == 0
+												? "No title"
+												: project.title}
 										</Link>
 									</TableCell>
 									<TableCell>
@@ -81,7 +77,7 @@ export default function ProjectTable(props: ExtendedProps) {
 											? getDateFromSeconds(
 													project.deadline.seconds
 											  ).toDateString()
-											: ""}
+											: "Till the end of days..."}
 									</TableCell>
 									<TableCell>
 										<Box
@@ -113,21 +109,6 @@ export default function ProjectTable(props: ExtendedProps) {
 												</Typography>
 											</Box>
 										</Box>
-									</TableCell>
-									<TableCell>
-										<IconButton
-											onClick={(e) => {
-												setOpen(true);
-												setMessage(
-													`Are you sure you want to delete ${project.title}?`
-												);
-												setAcceptFunction(() => {
-													deleteProject(project.id);
-												});
-											}}
-										>
-											<Delete color="error" />
-										</IconButton>
 									</TableCell>
 								</TableRow>
 							);

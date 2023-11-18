@@ -1,12 +1,20 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { GoogleAuthProvider, getAuth } from "firebase/auth";
+import {
+	GoogleAuthProvider,
+	getAuth,
+	connectAuthEmulator,
+} from "firebase/auth";
 import {
 	CACHE_SIZE_UNLIMITED,
+	Firestore,
+	connectFirestoreEmulator,
 	enablePersistentCacheIndexAutoCreation,
 	getFirestore,
 	initializeFirestore,
 	memoryLocalCache,
+	persistentLocalCache,
+	persistentMultipleTabManager,
 } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -36,13 +44,19 @@ const firebaseConfig = {
 // Initialize Firebase
 
 const app = initializeApp(firebaseConfig);
-// const firestore = initializeFirestore(app, {
-// 	localCache: memoryLocalCache(),
-// });
+const firestore = initializeFirestore(app, {
+	localCache: persistentLocalCache({
+		tabManager: persistentMultipleTabManager(),
+	}),
+});
 
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
+
+// export const auth = getAuth(app);
+
+export const db = getFirestore(app);
+// connectFirestoreEmulator(db, "127.0.0.1", 8080);
 
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
-
-export const db = getFirestore(app);
+// connectAuthEmulator(auth, "http://127.0.0.1:9099");

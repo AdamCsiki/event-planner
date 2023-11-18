@@ -16,6 +16,7 @@ import { RootState } from "../../redux/store";
 import { useEffect } from "react";
 import Link from "../../components/Link/Link";
 import { Google } from "@mui/icons-material";
+import IconButton from "../../components/IconButton/IconButton";
 
 export default function LoginPage() {
 	const auth = useSelector((state: RootState) => state.auth);
@@ -30,7 +31,7 @@ export default function LoginPage() {
 
 	const submit = () => {
 		return login(loginForm.email, loginForm.password).catch((err) => {
-			setErrorMsg(err);
+			console.log(err);
 		});
 	};
 
@@ -42,47 +43,57 @@ export default function LoginPage() {
 
 	return (
 		<div className="LoginPage">
-			<Box
-				sx={{
-					p: 1,
-					position: "absolute",
-				}}
-			></Box>
 			<FormControl
 				className="login-form"
 				onSubmit={(e) => {
 					e.preventDefault();
 				}}
+				sx={{
+					display: "flex",
+					gap: 4,
+				}}
 			>
 				<Typography
 					variant="h2"
-					mb={3}
-					sx={{ color: "primary.light", fontWeight: 600 }}
+					sx={{ color: "primary.light", fontWeight: 800 }}
 				>
 					Login
 				</Typography>
-				<TextField
-					label="Email"
-					onChange={(e) => {
-						setLoginForm((form) => {
-							form.email = e.target.value;
-							return { ...form };
-						});
-					}}
-				/>
-				<TextField
-					type="password"
-					label="Password"
-					onChange={(e) => {
-						setLoginForm((form) => {
-							form.password = e.target.value;
-							return { ...form };
-						});
-					}}
-				/>
-				<Link to={"/register"}>Make an account?</Link>
 				<Box
 					sx={{
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+
+						gap: 1,
+					}}
+				>
+					<TextField
+						label="Email"
+						onChange={(e) => {
+							setLoginForm((form) => {
+								form.email = e.target.value;
+								return { ...form };
+							});
+						}}
+					/>
+					<TextField
+						type="password"
+						label="Password"
+						onChange={(e) => {
+							setLoginForm((form) => {
+								form.password = e.target.value;
+								return { ...form };
+							});
+						}}
+					/>
+					<Link to={"/register"}>Make an account?</Link>
+				</Box>
+
+				<Box
+					sx={{
+						width: "100%",
+
 						display: "flex",
 						flexDirection: "column",
 						alignItems: "center",
@@ -91,6 +102,10 @@ export default function LoginPage() {
 				>
 					<Button
 						size="large"
+						sx={{
+							width: "100%",
+							borderRadius: "2rem",
+						}}
 						onClick={() => {
 							submit();
 						}}
@@ -98,18 +113,19 @@ export default function LoginPage() {
 						Login
 					</Button>
 					<Divider />
-					<Button
-						size="large"
-						sx={{
-							gap: 1,
-						}}
-						onClick={() => {
-							loginWithGoogle();
-						}}
-					>
-						<Google />
-						Login with Google
-					</Button>
+					<Box>
+						<IconButton
+							size="large"
+							sx={{
+								gap: 1,
+							}}
+							onClick={() => {
+								loginWithGoogle();
+							}}
+						>
+							<Google fontSize="large" />
+						</IconButton>
+					</Box>
 				</Box>
 				<Typography
 					color="error"

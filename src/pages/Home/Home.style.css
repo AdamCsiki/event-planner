@@ -26,10 +26,14 @@
 #background-video {
 	z-index: 0;
 
+	left: -200px;
+
 	width: auto;
-	height: 90%;
+	height: 40%;
 
 	min-height: 600px;
+
+	position: relative;
 }
 
 .home-top {
@@ -56,7 +60,8 @@
 
 @media screen and (min-width: 1040px) {
 	#background-video {
-		width: 90%;
+		left: 0px;
+		width: 85%;
 		height: auto;
 	}
 }

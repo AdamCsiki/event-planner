@@ -2,6 +2,7 @@ import "./Task.style.css";
 import {
 	HtmlHTMLAttributes,
 	Key,
+	MouseEvent,
 	useContext,
 	useEffect,
 	useState,
@@ -12,12 +13,15 @@ import {
 	Button,
 	ButtonBase,
 	Card,
+	Divider,
 	IconButton,
 	LinearProgress,
+	Menu,
+	MenuItem,
 	Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { blueGrey } from "@mui/material/colors";
+import { blue, blueGrey, grey } from "@mui/material/colors";
 import { useParams } from "react-router-dom";
 import {
 	deleteTaskRequest,
@@ -25,6 +29,16 @@ import {
 } from "../../requests/projectRequests";
 import { ConfirmContext } from "../../context/ConfirmContext";
 import { EditableText } from "../EditableText/EditableText";
+import {
+	ArrowDownward,
+	Cancel,
+	Check,
+	KeyboardArrowDown,
+	KeyboardArrowUp,
+	MoreVert,
+	Pause,
+	PlayArrow,
+} from "@mui/icons-material";
 
 interface ExtendedProps extends HtmlHTMLAttributes<HTMLDivElement> {
 	boardId: string;
@@ -35,11 +49,21 @@ export default function Task(props: ExtendedProps) {
 	const { projectId } = useParams();
 	const { setOpen, setAcceptFunction } = useContext(ConfirmContext);
 
+	const [isTaskOpen, setIsTaskOpen] = useState<boolean>(false);
+
+	const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+	const menuOpen = Boolean(menuAnchorEl);
+
+	const openMenu = (event: MouseEvent<HTMLButtonElement>) => {
+		setMenuAnchorEl(event.currentTarget);
+	};
+	const closeMenu = () => {
+		setMenuAnchorEl(null);
+	};
+
 	const { task, boardId } = props;
 
-	const [taskOpen, setTaskOpen] = useState(false);
-
-	const removeTask = () => {
+	const deleteTask = () => {
 		deleteTaskRequest(projectId!, boardId, task.id);
 	};
 
@@ -50,9 +74,17 @@ export default function Task(props: ExtendedProps) {
 	return (
 		<Box
 			sx={{
+				backgroundColor: "white",
+
+				border: "2px solid black",
+				borderColor: grey[300],
+				borderRadius: 2,
+
+				transition: "0.33s",
+
 				minWidth: "10rem",
 
-				backgroundColor: blueGrey[50],
+				margin: "0 0 1.5rem 0",
 
 				display: "flex",
 				flexDirection: "column",
@@ -60,79 +92,172 @@ export default function Task(props: ExtendedProps) {
 				textAlign: "initial",
 				width: "100%",
 
-				margin: "0 0 1.5rem 0",
-
-				borderBottomRightRadius: 10,
-				borderBottomLeftRadius: 10,
+				overflow: "hidden",
 			}}
 		>
-			<LinearProgress
-				color="primary"
-				value={50}
-				variant="determinate"
-			/>
-			<div className="task-header">
+			<Box
+				sx={{
+					width: `100%`,
+
+					display: `flex`,
+					justifyContent: `space-between`,
+					alignItems: `center`,
+
+					fontSize: `small`,
+				}}
+			>
 				<EditableText
+					textFieldVariant="outlined"
 					onFinish={(value) => {
+						if (value === task.title) {
+							return;
+						}
 						editTask({ title: value });
 					}}
 				>
 					{task.title}
 				</EditableText>
-				<IconButton
-					className="Button-x"
-					onClick={() => {
-						setAcceptFunction(() => {
-							removeTask();
-						});
-						setOpen(true);
-					}}
-				>
-					<CloseIcon fontSize="small" />
-				</IconButton>
-			</div>
-
-			{taskOpen && (
 				<Box
 					sx={{
-						minHeight: "fit-content",
-
-						p: 1,
-
-						borderTop: "1px solid #00000020",
-						borderBottom: "1px solid #00000020",
-
 						display: "flex",
+						flexDirection: "row",
 					}}
 				>
-					<EditableText
-						textFieldVariant="outlined"
-						onFinish={(value) => {
-							editTask({ details: value });
-						}}
-						sx={{
-							minWidth: "100%",
+					<IconButton
+						className="Button-x"
+						onClick={() => {
+							setIsTaskOpen(!isTaskOpen);
 						}}
 					>
-						{task.details && task.details.length == 0
-							? "Details"
-							: task.details}
-					</EditableText>
+						{isTaskOpen ? (
+							<KeyboardArrowDown fontSize="small" />
+						) : (
+							<KeyboardArrowUp fontSize="small" />
+						)}
+					</IconButton>
+					<IconButton
+						onClick={(e) => {
+							openMenu(e);
+						}}
+					>
+						<MoreVert fontSize="small" />
+					</IconButton>
 				</Box>
-			)}
+				<Menu
+					open={menuOpen}
+					anchorEl={menuAnchorEl}
+					onClose={closeMenu}
+				>
+					<MenuItem
+						onClick={() => {
+							setAcceptFunction(() => {
+								deleteTask();
+								closeMenu();
+							});
+							setOpen(true);
+						}}
+					>
+						Delete
+					</MenuItem>
+				</Menu>
+			</Box>
 
-			<Button
-				size="small"
-				sx={{ padding: "0.5rem" }}
-				color={taskOpen ? "error" : "info"}
-				onClick={() => {
-					setTaskOpen((prev) => {
-						return !prev;
-					});
+			<LinearProgress
+				// @ts-ignore
+				color={
+					task.status
+						? {
+								done: "success",
+								active: "primary",
+								paused: "warning",
+								canceled: "error",
+						  }[task.status]
+						: "primary"
+				}
+				value={100}
+				variant="determinate"
+			/>
+
+			<Box
+				sx={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+
+					p: 1,
 				}}
 			>
-				{taskOpen ? "CLOSE" : "OPEN"}
-			</Button>
+				<Box
+					sx={{
+						display: "flex",
+						alignItems: "center",
+					}}
+				>
+					<IconButton
+						onClick={() => {
+							if (task.status === "done") {
+								return;
+							}
+							editTask({ status: "done" });
+						}}
+					>
+						<Check
+							fontSize="small"
+							color="success"
+						/>
+					</IconButton>
+					<IconButton
+						onClick={() => {
+							if (task.status === "active") {
+								return;
+							}
+							editTask({ status: "active" });
+						}}
+					>
+						<PlayArrow
+							fontSize="small"
+							color="info"
+						/>
+					</IconButton>
+					<IconButton
+						onClick={() => {
+							if (task.status === "paused") {
+								return;
+							}
+							editTask({ status: "paused" });
+						}}
+					>
+						<Pause
+							fontSize="small"
+							color="warning"
+						/>
+					</IconButton>
+				</Box>
+			</Box>
+
+			<Box
+				sx={{
+					minWidth: "100%",
+
+					transition: "0.33s",
+
+					display: "flex",
+					justifyContent: "center",
+				}}
+			>
+				<EditableText
+					variant="body2"
+					textFieldVariant="outlined"
+					containerSx={{
+						display: isTaskOpen ? "block" : "none",
+					}}
+					onFinish={(value) => {
+						editTask({ details: value });
+					}}
+				>
+					{task.details}
+				</EditableText>
+			</Box>
 		</Box>
 	);
 }

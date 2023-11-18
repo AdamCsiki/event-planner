@@ -7,24 +7,42 @@ import {
 	InputProps,
 	SxProps,
 	TextFieldVariants,
+	InputBaseComponentProps,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { theme } from "../../Theme";
 
 interface ExtendedProps {
 	children: string;
 	onFinish: (value: string) => void;
-	sx?: SxProps;
+	containerSx?: SxProps;
+	textFieldSx?: SxProps;
+	inputProps?: InputBaseComponentProps;
+	typographySx?: SxProps;
+	multiline?: boolean;
 	variant?: TypographyVariant;
 	textFieldVariant?: TextFieldVariants;
-	inputProps?: InputProps;
 }
 
 export function EditableText(props: ExtendedProps) {
-	const { children, onFinish, sx, variant, inputProps, textFieldVariant } =
-		props;
+	const {
+		children,
+		onFinish,
+		containerSx,
+		textFieldSx,
+		inputProps,
+		typographySx,
+		variant,
+		textFieldVariant,
+		multiline,
+	} = props;
 
 	const [active, setActive] = useState(false);
 	const [value, setValue] = useState(children);
+
+	useEffect(() => {
+		setValue(children);
+	}, [children]);
 
 	return (
 		<Box
@@ -43,28 +61,54 @@ export function EditableText(props: ExtendedProps) {
 				}
 			}}
 			sx={{
+				minWidth: "3rem",
+				minHeight: "1rem",
+
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+
 				":hover": {
+					borderRadius: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.05)",
 					cursor: "pointer",
 				},
-				...sx,
+				...containerSx,
 			}}
 		>
 			{active ? (
 				<TextField
-					variant={textFieldVariant ?? "standard"}
+					fullWidth
+					variant={textFieldVariant ?? "outlined"}
 					value={value}
 					onChange={(e) => {
 						setValue(e.target.value);
 					}}
 					sx={{
-						padding: 0,
+						width: "100%",
 						margin: 0,
-						...sx,
+						...textFieldSx,
 					}}
 					inputProps={{
+						...inputProps,
 						style: {
-							padding: "0 0.5rem",
 							...inputProps?.style,
+							width: `${value.length}rem`,
+							maxWidth: "16rem",
+
+							margin: 0,
+							paddingLeft: 1,
+							paddingRight: 1,
+
+							fontSize:
+								theme.typography[variant || "body1"].fontSize,
+							fontWeight:
+								theme.typography[variant || "body1"].fontWeight,
+							letterSpacing:
+								theme.typography[variant || "body1"]
+									.letterSpacing,
+							lineHeight:
+								theme.typography[variant || "body1"].lineHeight,
 						},
 					}}
 					onFocus={(e) => {
@@ -74,20 +118,20 @@ export function EditableText(props: ExtendedProps) {
 						);
 					}}
 					autoFocus
-					multiline
+					multiline={multiline ?? true}
 				/>
 			) : (
 				<Typography
 					sx={{
-						pl: 1,
-						pr: 1,
+						width: "100%",
+						p: 2,
 						overflowWrap: "break-word",
 
-						...sx,
+						...typographySx,
 					}}
 					variant={variant}
 				>
-					{children ?? " "}
+					{children && children.length > 0 ? children : "Edit..."}
 				</Typography>
 			)}
 		</Box>

@@ -4,6 +4,7 @@ import { FireBaseDate } from "./FireBaseDate";
 
 export interface ProjectModel {
 	id: string;
+	order: string;
 	title: string;
 	details: string;
 	start_date: Timestamp;

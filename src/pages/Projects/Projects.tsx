@@ -5,17 +5,15 @@ import CreateProjectModal from "../../modals/CreateProjectModal/CreateProjectMod
 import TextField from "../../components/TextField/TextField";
 import ProjectTable from "../../components/ProjectTable/ProjectTable";
 import IconButton from "../../components/IconButton/IconButton";
-import { Create, PlusOne, Refresh, Search } from "@mui/icons-material";
-import {
-	getProjectsRequest,
-	projectsCollectionRef,
-} from "../../requests/projectRequests";
-import { collection, onSnapshot, query } from "firebase/firestore";
-import { db } from "../../config/firebase";
-import { getAuth } from "firebase/auth";
+import { Create, Refresh, Search } from "@mui/icons-material";
+import { ProjectContext } from "../../context/ProjectContext";
+import { onSnapshot, query } from "firebase/firestore";
+import { projectsCollectionRef } from "../../requests/projectRequests";
+import { Box } from "@mui/material";
 
-export default function Projects() {
-	const [projects, setProjects] = useState<ProjectModel[]>([]);
+export function Projects() {
+	const { projects, getProjects, setProjects } = useContext(ProjectContext);
+
 	const [searchQuery, setSearchQuery] = useState<string | null>(null);
 	const [visible, setVisible] = useState(false);
 
@@ -28,72 +26,59 @@ export default function Projects() {
 		return [];
 	};
 
-	const getProjects = () => {
-		getProjectsRequest().then((data) => {
-			setProjects(data);
-		});
-	};
-
-	useEffect(() => {
-		const projectsQuery = query(projectsCollectionRef());
-
-		const unsub = onSnapshot(projectsQuery, (snapshot) => {
-			console.log("Project snapshot");
-			const snapProjects: ProjectModel[] = [];
-			snapshot.docs.forEach((snap) => {
-				snapProjects.push({
-					...snap.data(),
-					id: snap.id,
-				} as ProjectModel);
-			});
-			setProjects(snapProjects);
-		});
-
-		return () => unsub();
-	}, []);
-
 	return (
-		<div className="ProjectsPage">
-			<div className="projects-container">
-				<div className="projects-header">
-					<TextField
-						placeholder="Title"
-						variant="standard"
-						onChange={(e) => {
-							setSearchQuery(e.target.value);
-						}}
-					/>
-					<IconButton onClick={() => searchProjects()}>
-						<Search />
-					</IconButton>
-					<IconButton
-						onClick={() => {
-							setVisible(true);
-						}}
-					>
-						<Create />
-					</IconButton>
-					<IconButton onClick={() => getProjects()}>
-						<Refresh />
-					</IconButton>
-				</div>
+		<Box
+			sx={{
+				width: "100%",
 
-				<ProjectTable
-					projects={projects}
-					refreshTable={getProjects}
-				/>
+				border: "1px solid black",
+				p: 1,
 
-				<CreateProjectModal
-					visible={visible}
-					onCancel={() => {
-						setVisible(false);
-					}}
-					onFinish={() => {
-						setVisible(false);
-						getProjects();
+				display: "flex",
+				flexDirection: "column",
+
+				flexGrow: 1,
+			}}
+		>
+			<Box
+				component={"header"}
+				sx={{
+					p: 1,
+				}}
+			>
+				<TextField
+					placeholder="Title"
+					variant="standard"
+					onChange={(e) => {
+						setSearchQuery(e.target.value);
 					}}
 				/>
-			</div>
-		</div>
+				<IconButton onClick={() => searchProjects()}>
+					<Search />
+				</IconButton>
+				<IconButton
+					onClick={() => {
+						setVisible(true);
+					}}
+				>
+					<Create />
+				</IconButton>
+				<IconButton onClick={() => getProjects()}>
+					<Refresh />
+				</IconButton>
+			</Box>
+
+			<ProjectTable projects={projects} />
+
+			<CreateProjectModal
+				visible={visible}
+				onCancel={() => {
+					setVisible(false);
+				}}
+				onFinish={() => {
+					setVisible(false);
+				}}
+			/>
+		</Box>
 	);
 }

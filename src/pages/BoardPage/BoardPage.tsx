@@ -1,5 +1,5 @@
 import "./BoardPage.style.css";
-import { useEffect, useState } from "react";
+import { MouseEvent, useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import Board from "../../components/Board/Board";
@@ -10,39 +10,121 @@ import {
 	createBoardRequest,
 	getBoardsRequest,
 } from "../../requests/projectRequests";
-import { useProject } from "../../Layouts/Project/ProjectLayout";
-import { onSnapshot, query } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import {
+	DocumentData,
+	QuerySnapshot,
+	getDocsFromCache,
+	onSnapshot,
+	orderBy,
+	query,
+	where,
+} from "firebase/firestore";
+import {
+	clearBoardsFromLocalStorage,
+	getBoardsFromLocalStorage,
+	setBoardsToLocalStorage,
+	compareBoardByOrder,
+} from "../../services/ProjectService";
+import { blue } from "@mui/material/colors";
 
 export default function BoardPage() {
 	const { projectId } = useParams();
-	const { userProject, setUserProject, getProject } = useProject();
 
-	const [projectBoards, setProjectBoards] = useState<BoardModel[]>();
+	const [boards, setBoards] = useState<BoardModel[]>([]);
 
 	const [newBoardName, setNewBoardName] = useState("");
 
 	const createBoard = (name: string) => {
-		createBoardRequest(projectId!, name);
+		if (!boards) {
+			return;
+		}
+		createBoardRequest(projectId!, name, boards.length + 1);
 	};
 
 	useEffect(() => {
-		const boardsQuery = query(boardsCollectionRef(projectId!));
-		const unsub = onSnapshot(boardsQuery, (snapshot) => {
-			const snapBoards: BoardModel[] = snapshot.docs.map((snap) => {
-				return {
-					id: snap.id,
-					...snap.data(),
-				} as BoardModel;
-			});
-			setProjectBoards(snapBoards);
-		});
+		if (!projectId) {
+			return;
+		}
 
-		return () => unsub();
+		setBoards(getBoardsFromLocalStorage(projectId));
+
+		const boardsQuery = query(
+			boardsCollectionRef(projectId),
+			orderBy("order")
+		);
+
+		const unsub = onSnapshot(
+			boardsQuery,
+			(snapshot) => {
+				snapshot.docChanges().forEach((change) => {
+					const currentLocalBoards =
+						getBoardsFromLocalStorage(projectId);
+					const boardIndex = currentLocalBoards.findIndex(
+						(board) => board.id === change.doc.id
+					);
+
+					if (change.type === "added") {
+						setBoards((current) => {
+							if (boardIndex == -1) {
+								return [
+									...current,
+									{
+										id: change.doc.id,
+										...change.doc.data(),
+									} as BoardModel,
+								];
+							}
+							return [...current];
+						});
+					}
+
+					if (change.type === "modified") {
+						setBoards((current) => {
+							const updatedBoards = current.map((board) => {
+								if (board.id === change.doc.id) {
+									return {
+										id: change.doc.id,
+										...change.doc.data(),
+									} as BoardModel;
+								}
+
+								return board;
+							});
+
+							updatedBoards.sort(compareBoardByOrder);
+
+							return updatedBoards;
+						});
+					}
+
+					if (change.type === "removed") {
+						setBoards((current) => {
+							if (boardIndex !== -1) {
+								current.splice(boardIndex, 1);
+							}
+							return [...current];
+						});
+					}
+				});
+			},
+			(error) => {
+				console.error(error);
+			}
+		);
+
+		return unsub;
 	}, []);
+
+	useEffect(() => {
+		if (!projectId) {
+			return;
+		}
+		setBoardsToLocalStorage(projectId, boards);
+	}, [boards]);
 
 	return (
 		<Box
+			bgcolor={blue[100]}
 			sx={{
 				height: "100%",
 				width: "100%",
@@ -55,11 +137,11 @@ export default function BoardPage() {
 				overflowX: "auto",
 
 				padding: 2,
-				gap: 3,
+				gap: { xs: 4, sm: 3 },
 			}}
 		>
-			{projectBoards &&
-				projectBoards.map((board, index) => {
+			{boards &&
+				boards.map((board, index) => {
 					return (
 						<Board
 							key={index}
@@ -69,28 +151,33 @@ export default function BoardPage() {
 				})}
 			<Box
 				sx={{
+					width: { xs: "100%", sm: 300 },
+					minWidth: { xs: "100%", sm: 300 },
+					maxWidth: { xs: "100%", sm: 300 },
+
 					display: "flex",
+
 					gap: 1,
 				}}
 			>
 				<TextField
 					variant="standard"
+					size="medium"
+					sx={{
+						width: "100%",
+					}}
 					placeholder="New Board"
 					value={newBoardName}
 					onChange={(e) => {
 						setNewBoardName(e.target.value);
-					}}
-					sx={{
-						minWidth: "8rem",
 					}}
 				/>
 				<Button
 					onClick={() => {
 						createBoard(newBoardName);
 					}}
-					size="small"
 				>
-					Add
+					ADD
 				</Button>
 			</Box>
 		</Box>
