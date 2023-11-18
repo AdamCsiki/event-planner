@@ -11,34 +11,31 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { theme } from "../../Theme";
+import { DatePicker } from "@mui/x-date-pickers";
+import { editProjectRequest } from "../../requests/projectRequests";
+import dayjs from "dayjs";
 
 interface ExtendedProps {
 	children: string;
 	onFinish: (value: string) => void;
 	onFinal?: () => void;
 	containerSx?: SxProps;
-	textFieldSx?: SxProps;
-	inputProps?: InputBaseComponentProps;
+	datePickerSx?: InputBaseComponentProps;
 	typographySx?: SxProps;
-	multiline?: boolean;
 	variant?: TypographyVariant;
 	isActive?: boolean;
-	textFieldVariant?: TextFieldVariants;
 }
 
-export function EditableText(props: ExtendedProps) {
+export function EditableDate(props: ExtendedProps) {
 	const {
 		children,
 		onFinish,
 		onFinal,
 		containerSx,
-		textFieldSx,
-		inputProps,
+		datePickerSx,
 		typographySx,
 		variant,
 		isActive,
-		textFieldVariant,
-		multiline,
 	} = props;
 
 	const [active, setActive] = useState(isActive || false);
@@ -54,11 +51,11 @@ export function EditableText(props: ExtendedProps) {
 				setActive(true);
 			}}
 			onBlur={() => {
-				if (value !== children) {
-					onFinish(value);
-				}
-				setActive(false);
-				onFinal?.();
+				// if (value !== children) {
+				// 	onFinish(value);
+				// }
+				// setActive(false);
+				// onFinal?.();
 			}}
 			onKeyDown={(e) => {
 				if (e.key === "Escape") {
@@ -82,50 +79,20 @@ export function EditableText(props: ExtendedProps) {
 			}}
 		>
 			{active ? (
-				<TextField
-					fullWidth
-					variant={textFieldVariant ?? "outlined"}
-					value={value}
-					onChange={(e) => {
-						setValue(e.target.value);
-					}}
+				<DatePicker
+					format="DD/MM/YYYY"
 					sx={{
-						width: "100%",
-						margin: 0,
-						...textFieldSx,
+						...datePickerSx,
+						input: { color: datePickerSx?.color },
+						label: { color: datePickerSx?.color },
+					}} // @ts-ignore
+					value={dayjs(children)}
+					onChange={(value: string | null) => {
+						if (!value) {
+							return;
+						}
+						setValue(value);
 					}}
-					inputProps={{
-						...inputProps,
-						style: {
-							width: `${
-								value && value.length ? value.length : 2
-							}rem`,
-							maxWidth: "100%",
-
-							margin: 0,
-							paddingLeft: 1,
-							paddingRight: 1,
-
-							fontSize:
-								theme.typography[variant || "body1"].fontSize,
-							fontWeight:
-								theme.typography[variant || "body1"].fontWeight,
-							letterSpacing:
-								theme.typography[variant || "body1"]
-									.letterSpacing,
-							lineHeight:
-								theme.typography[variant || "body1"].lineHeight,
-							...inputProps?.style,
-						},
-					}}
-					onFocus={(e) => {
-						e.currentTarget.setSelectionRange(
-							e.currentTarget.value.length,
-							e.currentTarget.value.length
-						);
-					}}
-					autoFocus
-					multiline={multiline ?? true}
 				/>
 			) : (
 				<Typography

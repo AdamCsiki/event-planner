@@ -43,10 +43,10 @@ export function setTasksToLocalStorage(
 		`${projectId}/boards/${boardId}/tasks`,
 		JSON.stringify(tasks)
 	);
-	console.log(
-		"localTasks: ",
-		localStorage.getItem(`${projectId}/boards/${boardId}/tasks`)
-	);
+	// console.log(
+	// 	"localTasks: ",
+	// 	localStorage.getItem(`${projectId}/boards/${boardId}/tasks`)
+	// );
 }
 
 export function getTasksFromLocalStorage(projectId: string, boardId: string) {

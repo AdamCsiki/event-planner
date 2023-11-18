@@ -151,9 +151,14 @@ export default function BoardPage() {
 				})}
 			<Box
 				sx={{
+					backgroundColor: "background.default",
+
 					width: { xs: "100%", sm: 300 },
 					minWidth: { xs: "100%", sm: 300 },
 					maxWidth: { xs: "100%", sm: 300 },
+
+					p: 2,
+					borderRadius: 2,
 
 					display: "flex",
 
@@ -161,8 +166,7 @@ export default function BoardPage() {
 				}}
 			>
 				<TextField
-					variant="standard"
-					size="medium"
+					size="small"
 					sx={{
 						width: "100%",
 					}}
@@ -173,6 +177,7 @@ export default function BoardPage() {
 					}}
 				/>
 				<Button
+					size="large"
 					onClick={() => {
 						createBoard(newBoardName);
 					}}
