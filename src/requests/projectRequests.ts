@@ -12,6 +12,7 @@ import {
 	documentId,
 	updateDoc,
 	deleteDoc,
+	orderBy,
 } from "firebase/firestore";
 import { ProjectFormModel } from "../interfaces/ProjectFormModel";
 import { getAuth } from "firebase/auth";
@@ -21,6 +22,7 @@ export const projectsCollectionRef = () => {
 
 	return collection(db, `users/${user}/projects`);
 };
+
 export const boardsCollectionRef = (projectId: string) => {
 	const user = getAuth().currentUser?.uid;
 
@@ -104,7 +106,9 @@ export const deleteProjectRequest = async (projectId: string) => {
  */
 export const getBoardsRequest = async (projectId: string) => {
 	try {
-		const data = await getDocs(boardsCollectionRef(projectId));
+		const data = await getDocs(
+			query(boardsCollectionRef(projectId), orderBy("order"))
+		);
 		const filtered = data.docs.map((doc) => ({
 			...doc.data(),
 			id: doc.id,
@@ -116,8 +120,12 @@ export const getBoardsRequest = async (projectId: string) => {
 	}
 };
 
-export const createBoardRequest = (projectId: string, title: string) => {
-	const newBoard = { title: title };
+export const createBoardRequest = (
+	projectId: string,
+	title: string,
+	orderNumber: number
+) => {
+	const newBoard = { title: title, order: orderNumber };
 
 	try {
 		addDoc(boardsCollectionRef(projectId), newBoard);
