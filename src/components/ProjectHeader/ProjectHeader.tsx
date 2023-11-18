@@ -10,6 +10,9 @@ import { editProjectRequest } from "../../requests/projectRequests";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { getDateFromSeconds } from "../../services/DateService";
 import { ProjectContext } from "../../context/ProjectContext";
+import { EditableDate } from "../EditableDate/EditableDate";
+import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers";
 
 export function ProjectHeader() {
 	const { projectId } = useParams();
@@ -64,35 +67,66 @@ export function ProjectHeader() {
 			</Box>
 			{project ? (
 				<>
-					<Box sx={{ display: "flex", gap: 1 }}>
+					<Box
+						sx={{
+							display: "flex",
+							gap: 1,
+							marginRight: project.deadline ? 0 : 2,
+						}}
+					>
 						<Link
 							sx={{ color: "white" }}
 							to={`board`}
 						>
 							Board
 						</Link>
-						<Link
+						{/* <Link
 							sx={{ color: "white" }}
 							to={`details`}
 						>
 							Details
-						</Link>
+						</Link> */}
 					</Box>
-					<Typography
-						sx={{ display: { xs: "none", sm: "flex" } }}
-						component={"span"}
-					>
-						Deadline{" "}
-						<Typography
-							color={red[500]}
-							sx={{ mr: 0.5, ml: 0.5 }}
+					{project.deadline && (
+						<Box
+							sx={{
+								display: { xs: "none", sm: "flex" },
+								alignItems: "center",
+							}}
+							component={"span"}
 						>
-							{project?.deadline &&
-								getDateFromSeconds(
-									project.deadline.seconds
-								).toDateString()}
-						</Typography>
-					</Typography>
+							Deadline{" "}
+							<DatePicker
+								format="DD/MM/YYYY"
+								formatDensity="dense"
+								sx={{
+									width: "9.8rem",
+									border: "none",
+									ml: 0.5,
+
+									input: {
+										color: red[500],
+									},
+									svg: { color: "background.default" },
+								}} // @ts-ignore
+								value={dayjs(
+									getDateFromSeconds(project.deadline.seconds)
+								)}
+								onChange={(value: any) => {
+									if (
+										!value ||
+										getDateFromSeconds(
+											project.deadline.seconds
+										).getTime() ===
+											new Date(value).getTime()
+									) {
+										return;
+									}
+									editProject({ deadline: new Date(value) });
+								}}
+							/>
+						</Box>
+					)}
 				</>
 			) : (
 				<Fragment></Fragment>

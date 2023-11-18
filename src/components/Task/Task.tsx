@@ -161,7 +161,6 @@ export default function Task(props: ExtendedProps) {
 					</MenuItem>
 				</Menu>
 			</Box>
-
 			<LinearProgress
 				// @ts-ignore
 				color={
@@ -177,7 +176,6 @@ export default function Task(props: ExtendedProps) {
 				value={100}
 				variant="determinate"
 			/>
-
 			<Box
 				sx={{
 					display: "flex",
@@ -234,22 +232,20 @@ export default function Task(props: ExtendedProps) {
 					</IconButton>
 				</Box>
 			</Box>
-
-			<Box
-				sx={{
-					minWidth: "100%",
-
-					transition: "0.33s",
-
-					display: "flex",
-					justifyContent: "center",
-				}}
-			>
+			{isTaskOpen && (
 				<EditableText
 					variant="body2"
 					textFieldVariant="outlined"
 					containerSx={{
-						display: isTaskOpen ? "block" : "none",
+						transition: "0.33s",
+						width: "100%",
+						alignItems: "center",
+					}}
+					inputProps={{
+						style: {
+							maxWidth: "100%",
+							width: "100%",
+						},
 					}}
 					onFinish={(value) => {
 						editTask({ details: value });
@@ -257,7 +253,7 @@ export default function Task(props: ExtendedProps) {
 				>
 					{task.details}
 				</EditableText>
-			</Box>
+			)}
 		</Box>
 	);
 }

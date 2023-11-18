@@ -5,7 +5,7 @@ import CreateProjectModal from "../../modals/CreateProjectModal/CreateProjectMod
 import TextField from "../../components/TextField/TextField";
 import ProjectTable from "../../components/ProjectTable/ProjectTable";
 import IconButton from "../../components/IconButton/IconButton";
-import { Create, Refresh, Search } from "@mui/icons-material";
+import { Add, Create, Refresh, Search } from "@mui/icons-material";
 import { ProjectContext } from "../../context/ProjectContext";
 import { onSnapshot, query } from "firebase/firestore";
 import { projectsCollectionRef } from "../../requests/projectRequests";
@@ -61,7 +61,7 @@ export function Projects() {
 						setVisible(true);
 					}}
 				>
-					<Create />
+					<Add />
 				</IconButton>
 				<IconButton onClick={() => getProjects()}>
 					<Refresh />

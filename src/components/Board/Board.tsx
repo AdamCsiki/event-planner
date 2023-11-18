@@ -161,9 +161,9 @@ export default function Board(props: ExtendedProps) {
 
 				maxHeight: { sm: "100%" },
 
-				width: { xs: "100%", sm: 300 },
+				width: { xs: "100%", sm: 350 },
 				minWidth: { xs: "100%", sm: 300 },
-				maxWidth: { xs: "100%", sm: 300 },
+				maxWidth: { xs: "100%", sm: 350 },
 
 				mr: 2,
 				pl: 0,
